@@ -10,19 +10,6 @@ internal static class Program
 	private const int SCR_WIDTH = 800;
 	private const int SCR_HEIGHT = 600;
 
-	private const string VERTEX_SHADER_SOURCE = "#version 330 core\n" +
-	                                            "layout (location = 0) in vec3 aPos;\n" +
-	                                            "void main()\n" +
-	                                            "{\n" +
-	                                            "	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +
-	                                            "}\0";
-
-	private const string FRAGMENT_SHADER_SOURCE = "#version 330 core\n" +
-	                                              "out vec4 FragColor;\n" +
-	                                              "void main()\n" +
-	                                              "{\n" +
-	                                              "	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-	                                              "}";
 
 	private const int INFO_LOG_SIZE = 512;
 
@@ -51,9 +38,11 @@ internal static class Program
 		Console.WriteLine("GLFW window created");
 
 		// Build and Compile our Shader Program
+		string vertexShaderSource = File.ReadAllText("shader.vert");
+		string fragmentShaderSource = File.ReadAllText("shader.frag");
 		// vertex shader
 		uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, new[] {VERTEX_SHADER_SOURCE,}, null);
+		glShaderSource(vertexShader, 1, new[] {vertexShaderSource,}, null);
 		glCompileShader(vertexShader);
 		// check for shader compile errors
 		int success = 0;
@@ -68,7 +57,7 @@ internal static class Program
 
 		// fragment shader
 		uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, new[] {FRAGMENT_SHADER_SOURCE,}, null);
+		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource,}, null);
 		glCompileShader(fragmentShader);
 		// check for shader compile errors
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, ref success);
@@ -104,16 +93,27 @@ internal static class Program
 		// Set up Vertex Data (and Buffer(s)) and Configure Vertex Attributes
 		float[] vertices =
 		{
-			-0.5f, -0.5f, 0.0f, // left
-			0.5f, -0.5f, 0.0f, // right
-			0.0f, 0.5f, 0.0f, // top
+			0.5f, 0.5f, 0.0f, // top right
+			0.5f, -0.5f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f, // bottom left
+			-0.5f, 0.5f, 0.0f, // top left
+		};
+
+		uint[] indices =
+		{
+			// note that we start from 0!
+			0, 1, 3, // first triangle
+			1, 2, 3, // second triangle
 		};
 
 		// Vertex Buffer Object
 		uint[] vbo = new uint[1];
 		uint[] vao = new uint[1];
+		uint[] ebo = new uint[1];
 		glGenVertexArrays(1, vao);
 		glGenBuffers(1, vbo);
+		glGenBuffers(1, ebo);
+
 		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 		glBindVertexArray(vao[0]);
 
@@ -122,6 +122,10 @@ internal static class Program
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
+
+		// bind the EBO
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL_STATIC_DRAW);
 
 		// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -149,7 +153,9 @@ internal static class Program
 			// Draw our first triangle
 			glUseProgram(shaderProgram);
 			glBindVertexArray(vao[0]);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
 
 			// GLFW: Swap Buffers and Poll IO Events (keys pressed/released, mouse moved etc.)
 			glfwSwapBuffers(window);
