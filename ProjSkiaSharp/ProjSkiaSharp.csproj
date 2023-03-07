@@ -17,6 +17,12 @@
 	<ItemGroup>
 		<PackageReference Include="SkiaSharp" Version="2.88.3"/>
 	</ItemGroup>
+	<ItemGroup Condition="'$(OS)' == 'UNIX'">
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3"/>
+	</ItemGroup>
+	<ItemGroup Condition="'$(OS)' == 'UNIX'">
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3"/>
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Remove="shader.frag"/>
@@ -25,6 +31,10 @@
 		</EmbeddedResource>
 		<None Remove="shader.vert"/>
 		<EmbeddedResource Include="shader.vert">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<None Remove="container.jpg"/>
+		<EmbeddedResource Include="container.jpg">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
 	</ItemGroup>
