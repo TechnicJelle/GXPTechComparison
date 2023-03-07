@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using static Arqan.GL;
 using static Arqan.GLFW;
 
@@ -37,37 +38,7 @@ internal static class Program
 
 		Console.WriteLine("GLFW window created");
 
-		// Build and Compile our Shader Program
-		string vertexShaderSource = File.ReadAllText("shader.vert");
-		string fragmentShaderSource = File.ReadAllText("shader.frag");
-		// vertex shader
-		uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, new[] {vertexShaderSource,}, null);
-		glCompileShader(vertexShader);
-		// check for shader compile errors
-		int success = 0;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, ref success);
-		if (success == 0)
-		{
-			int logLength = -1;
-			byte[] infoLog = new byte[INFO_LOG_SIZE];
-			glGetShaderInfoLog(vertexShader, INFO_LOG_SIZE, ref logLength, infoLog);
-			Console.WriteLine("Vertex Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
-		}
-
-		// fragment shader
-		uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource,}, null);
-		glCompileShader(fragmentShader);
-		// check for shader compile errors
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, ref success);
-		if (success == 0)
-		{
-			int logLength = -1;
-			byte[] infoLog = new byte[INFO_LOG_SIZE];
-			glGetShaderInfoLog(fragmentShader, INFO_LOG_SIZE, ref logLength, infoLog);
-			Console.WriteLine("Fragment Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
-		}
+		uint shaderProgram = ShaderProgram("shader.vert", "shader.frag");
 
 		// link shaders
 		uint shaderProgram = glCreateProgram();
@@ -93,10 +64,11 @@ internal static class Program
 		// Set up Vertex Data (and Buffer(s)) and Configure Vertex Attributes
 		float[] vertices =
 		{
-			0.5f, 0.5f, 0.0f, // top right
-			0.5f, -0.5f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f, // bottom left
-			-0.5f, 0.5f, 0.0f, // top left
+			// positions      // colors
+			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+			-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, // top left
 		};
 
 		uint[] indices =
@@ -120,8 +92,12 @@ internal static class Program
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 		glBufferData(GL_ARRAY_BUFFER, vertices.Length * sizeof(float), vertices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), 0);
+		// position attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
+		// color attribute
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * sizeof(float), 3 * sizeof(float));
+		glEnableVertexAttribArray(1);
 
 		// bind the EBO
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
@@ -180,5 +156,87 @@ internal static class Program
 	private static void FramebufferSizeCallback(nint window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
+	}
+
+	/// <exception cref="FileNotFoundException"></exception>
+	private static string ReadResourceText(string name)
+	{
+		Stream stream = ReadResourceStream(name);
+		using StreamReader reader = new(stream);
+		return reader.ReadToEnd();
+	}
+
+	/// <exception cref="FileNotFoundException"></exception>
+	private static SKBitmap ReadResourceImage(string name)
+	{
+		Stream stream = ReadResourceStream(name);
+		return SKBitmap.Decode(stream);
+	}
+
+	/// <exception cref="FileNotFoundException"></exception>
+	private static Stream ReadResourceStream(string name)
+	{
+		Assembly assembly = Assembly.GetExecutingAssembly();
+		string? resourcePath = assembly.GetManifestResourceNames()
+			.SingleOrDefault(str => str.EndsWith(name));
+		if (resourcePath == null) throw new FileNotFoundException(name);
+		return assembly.GetManifestResourceStream(resourcePath) ?? throw new FileNotFoundException(resourcePath);
+	}
+
+	private static uint ShaderProgram(string vertex, string fragment)
+	{
+		// Build and Compile our Shader Program
+		string vertexShaderSource = ReadResourceText(vertex);
+		string fragmentShaderSource = ReadResourceText(fragment);
+		// vertex shader
+		uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertexShader, 1, new[] {vertexShaderSource,}, null);
+		glCompileShader(vertexShader);
+		// check for shader compile errors
+		int success = 0;
+		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, ref success);
+		if (success == 0)
+		{
+			int logLength = -1;
+			byte[] infoLog = new byte[INFO_LOG_SIZE];
+			glGetShaderInfoLog(vertexShader, INFO_LOG_SIZE, ref logLength, infoLog);
+			Console.WriteLine("Vertex Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
+		}
+
+		// fragment shader
+		uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource,}, null);
+		glCompileShader(fragmentShader);
+		// check for shader compile errors
+		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, ref success);
+		if (success == 0)
+		{
+			int logLength = -1;
+			byte[] infoLog = new byte[INFO_LOG_SIZE];
+			glGetShaderInfoLog(fragmentShader, INFO_LOG_SIZE, ref logLength, infoLog);
+			Console.WriteLine("Fragment Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
+		}
+
+		// link shaders
+		uint shaderProgram = glCreateProgram();
+		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, fragmentShader);
+		glLinkProgram(shaderProgram);
+		// check for linking errors
+		int[] success2 = new int[1];
+		glGetProgramiv(shaderProgram, GL_LINK_STATUS, success2);
+		if (success2[0] == 0)
+		{
+			int logLength = -1;
+			byte[] infoLog = new byte[INFO_LOG_SIZE];
+			glGetProgramInfoLog(shaderProgram, INFO_LOG_SIZE, ref logLength, infoLog);
+			Console.WriteLine("Shader Program Linking Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
+		}
+
+		glUseProgram(shaderProgram);
+
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+		return shaderProgram;
 	}
 }

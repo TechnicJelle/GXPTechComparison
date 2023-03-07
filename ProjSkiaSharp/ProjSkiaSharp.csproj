@@ -19,11 +19,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="shader.frag"/>
 		<EmbeddedResource Include="shader.frag">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
+		<None Remove="shader.vert"/>
 		<EmbeddedResource Include="shader.vert">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
 	</ItemGroup>
 
