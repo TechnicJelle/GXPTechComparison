@@ -46,10 +46,10 @@ internal static class Program
 		float[] vertices =
 		{
 			// positions      // colors        // texture coords
-			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top left
+			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // right top
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // right bottom
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // left bottom
+			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // left top
 		};
 
 		uint[] indices =
@@ -97,7 +97,7 @@ internal static class Program
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// load and generate the texture
 		SKBitmap bitmap = ReadResourceImage("container.jpg");
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmap.Width, bitmap.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmap.GetPixels());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap.Width, bitmap.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmap.GetPixels());
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// Render Loop
