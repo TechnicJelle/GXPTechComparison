@@ -12,9 +12,9 @@ internal static class Program
 	private const int SCR_WIDTH = 800;
 	private const int SCR_HEIGHT = 600;
 
+	private const string WINDOW_TITLE = "ProjSkiaSharp";
 
-	private const int INFO_LOG_SIZE = 512;
-
+	private const int GL_INFO_LOG_SIZE = 512;
 
 	private static int Main(string[] args)
 	{
@@ -25,7 +25,7 @@ internal static class Program
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// GLFW: Window Creation
-		nint window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ProjSkiaSharp"u8.ToArray(), 0, 0);
+		nint window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, Encoding.UTF8.GetBytes(WINDOW_TITLE), 0, 0);
 		if (window == 0)
 		{
 			Console.WriteLine("Failed to create GLFW window");
@@ -102,6 +102,7 @@ internal static class Program
 
 		// Render Loop
 		double lastTime = glfwGetTime();
+		double fpsTimer = glfwGetTime();
 		while (glfwWindowShouldClose(window) != 1)
 		{
 			double deltaTime = glfwGetTime() - lastTime;
@@ -109,8 +110,12 @@ internal static class Program
 			// Input
 			ProcessInput(window);
 
-			// Get Framerate
-			// Console.WriteLine("FPS: " + 1.0 / deltaTime);
+			// Change Window Title to show FPS, every second
+			if (glfwGetTime() - fpsTimer >= 1.0)
+			{
+				glfwSetWindowTitle(window, $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
+				fpsTimer = glfwGetTime();
+			}
 
 			// Render
 			// Clear the screen
@@ -189,8 +194,8 @@ internal static class Program
 		if (success == 0)
 		{
 			int logLength = -1;
-			byte[] infoLog = new byte[INFO_LOG_SIZE];
-			glGetShaderInfoLog(vertexShader, INFO_LOG_SIZE, ref logLength, infoLog);
+			byte[] infoLog = new byte[GL_INFO_LOG_SIZE];
+			glGetShaderInfoLog(vertexShader, GL_INFO_LOG_SIZE, ref logLength, infoLog);
 			Console.WriteLine("Vertex Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
 		}
 
@@ -203,8 +208,8 @@ internal static class Program
 		if (success == 0)
 		{
 			int logLength = -1;
-			byte[] infoLog = new byte[INFO_LOG_SIZE];
-			glGetShaderInfoLog(fragmentShader, INFO_LOG_SIZE, ref logLength, infoLog);
+			byte[] infoLog = new byte[GL_INFO_LOG_SIZE];
+			glGetShaderInfoLog(fragmentShader, GL_INFO_LOG_SIZE, ref logLength, infoLog);
 			Console.WriteLine("Fragment Shader Compilation Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
 		}
 
@@ -219,8 +224,8 @@ internal static class Program
 		if (success2[0] == 0)
 		{
 			int logLength = -1;
-			byte[] infoLog = new byte[INFO_LOG_SIZE];
-			glGetProgramInfoLog(shaderProgram, INFO_LOG_SIZE, ref logLength, infoLog);
+			byte[] infoLog = new byte[GL_INFO_LOG_SIZE];
+			glGetProgramInfoLog(shaderProgram, GL_INFO_LOG_SIZE, ref logLength, infoLog);
 			Console.WriteLine("Shader Program Linking Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
 		}
 
