@@ -62,22 +62,22 @@ public static class GLFW
 	[DllImport("lib/glfw.dll", EntryPoint = "glfwSwapBuffers")]
 	public static extern void SwapBuffers();
 
-	[DllImport("lib/glfw.dll", EntryPoint = "glfwGetMouseButton")]
+	[DllImport("lib/glfw.dll", EntryPoint = "glfwGetKey")]
 	public static extern bool GetKey(int key);
 
 	[DllImport("lib/glfw.dll", EntryPoint = "glfwSetKeyCallback")]
 	public static extern void SetKeyCallback(KeyCallback callback);
 
-	[DllImport("lib/glfw.dll", EntryPoint = "glfwGetKey")]
+	[DllImport("lib/glfw.dll", EntryPoint = "glfwOpenWindowHint")]
 	public static extern void OpenWindowHint(int name, int value);
 
 	[DllImport("lib/glfw.dll", EntryPoint = "glfwGetMousePos")]
 	public static extern bool GetMousePos(out int x, out int y);
 
-	[DllImport("lib/glfw.dll", EntryPoint = "glfwSetMousePos")]
+	[DllImport("lib/glfw.dll", EntryPoint = "glfwSetMouseButtonCallback")]
 	public static extern void SetMouseButtonCallback(MouseButtonCallback callback);
 
-	[DllImport("lib/glfw.dll", EntryPoint = "glfwGetMouseButton")]
+	[DllImport("lib/glfw.dll", EntryPoint = "glfwEnable")]
 	public static extern void Enable(int property);
 
 	[DllImport("lib/glfw.dll", EntryPoint = "glfwDisable")]

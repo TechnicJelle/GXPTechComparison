@@ -17,7 +17,7 @@ internal static class Program
 		GLFW.Init();
 
 		// GLFW: Window Creation
-		GLFW.OpenWindowHint(GLFW.FSAA_SAMPLES, 8);
+		// GLFW.OpenWindowHint(GLFW.FSAA_SAMPLES, 8);
 		GLFW.OpenWindow(SCR_WIDTH, SCR_HEIGHT, 8, 8, 8, 8, 24, 0, GLFW.WINDOWED);
 		GLFW.SetWindowTitle(WINDOW_TITLE);
 
