@@ -12,6 +12,8 @@
 		<FileAlignment>512</FileAlignment>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<LangVersion>10</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,7 +41,15 @@
 		<Reference Include="System.Xml" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Include="bindings\GL.cs" />
+		<Compile Include="bindings\GLFW.cs" />
+		<Compile Include="bindings\Key.cs" />
 		<Compile Include="Program.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="lib\glfw.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
