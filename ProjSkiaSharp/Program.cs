@@ -35,7 +35,7 @@ internal static class Program
 
 		glfwMakeContextCurrent(window);
 		glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-		glfwSwapInterval(1); // VSync
+		glfwSwapInterval(0); // VSync
 
 		Console.WriteLine("GLFW window created");
 
@@ -122,7 +122,7 @@ internal static class Program
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			// Draw our first triangle
+			// Draw our textured square
 			glUseProgram(shaderProgram);
 			glBindVertexArray(vao[0]);
 			// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -149,9 +149,9 @@ internal static class Program
 			glfwSetWindowShouldClose(window, 1);
 	}
 
-	private static void FramebufferSizeCallback(nint window, int width, int height)
+	private static void FramebufferSizeCallback(nint window, int newWidth, int newHeight)
 	{
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, newWidth, newHeight);
 	}
 
 	/// <exception cref="FileNotFoundException"></exception>
