@@ -11,7 +11,7 @@ internal static class Program
 	private const int SCR_WIDTH = 800;
 	private const int SCR_HEIGHT = 600;
 
-	private const string WINDOW_TITLE = "ProjSkiaSharp";
+	private const string WINDOW_TITLE = "ProjWinDrawing";
 
 	public static int Main(string[] args)
 	{
