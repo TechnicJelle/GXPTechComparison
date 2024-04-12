@@ -84,6 +84,7 @@ internal static class Program
 
 			// Draw our textured square
 			// GL.BlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
+			GL.Enable(GL.TEXTURE_2D);
 			GL.Color4ub(255, 0, 255, 255);
 			GL.BindTexture(GL.TEXTURE_2D, texture[0]);
 			GL.EnableClientState(GL.TEXTURE_COORD_ARRAY);
