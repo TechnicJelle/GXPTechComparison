@@ -6,7 +6,7 @@ using static Arqan.GLFW;
 
 namespace ProjSkiaSharp;
 
-internal static class Program
+static internal class Program
 {
 	// Settings
 	private const int SCR_WIDTH = 800;
@@ -19,7 +19,8 @@ internal static class Program
 	private static int Main(string[] args)
 	{
 		// GLFW: Initialize and Configure
-		glfwInit();
+		int result = glfwInit();
+		if (result == 0) return -1;
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -103,7 +104,7 @@ internal static class Program
 		// Render Loop
 		double lastTime = glfwGetTime();
 		double fpsTimer = glfwGetTime();
-		while (glfwWindowShouldClose(window) != 1)
+		while(glfwWindowShouldClose(window) != 1)
 		{
 			double deltaTime = glfwGetTime() - lastTime;
 			lastTime = glfwGetTime();
@@ -173,8 +174,7 @@ internal static class Program
 	private static Stream ReadResourceStream(string name)
 	{
 		Assembly assembly = Assembly.GetExecutingAssembly();
-		string? resourcePath = assembly.GetManifestResourceNames()
-			.SingleOrDefault(str => str.EndsWith(name));
+		string? resourcePath = assembly.GetManifestResourceNames().SingleOrDefault(str => str.EndsWith(name));
 		if (resourcePath == null) throw new FileNotFoundException(name);
 		return assembly.GetManifestResourceStream(resourcePath) ?? throw new FileNotFoundException(resourcePath);
 	}

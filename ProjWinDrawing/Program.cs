@@ -5,7 +5,7 @@ using ProjWinDrawing.bindings;
 
 namespace ProjWinDrawing;
 
-internal static class Program
+static internal class Program
 {
 	// Settings
 	private const int SCR_WIDTH = 800;
@@ -57,13 +57,13 @@ internal static class Program
 		// load and generate the texture
 		Bitmap bitmap = new("container.jpg");
 		BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-		GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, bitmap.Width, bitmap.Height, 0, GL.RGBA, GL.UNSIGNED_BYTE, data.Scan0);
+		GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, bitmap.Width, bitmap.Height, 0, GL.BGRA, GL.UNSIGNED_BYTE, data.Scan0);
 		bitmap.UnlockBits(data);
 
 		// Render Loop
 		double lastTime = GLFW.GetTime();
 		double fpsTimer = GLFW.GetTime();
-		while (GLFW.GetWindowParam(GLFW.ACTIVE) == 1)
+		while(GLFW.GetWindowParam(GLFW.ACTIVE) == 1)
 		{
 			double deltaTime = GLFW.GetTime() - lastTime;
 			lastTime = GLFW.GetTime();
