@@ -48,13 +48,21 @@ static internal class Program
 
 	private static void CreateWindow()
 	{
+		// Initialisation
 		GLFW.Init();
 
+		// Configuration
+		// > Multisampling
 		GLFW.OpenWindowHint(GLFW.FSAA_SAMPLES, 8);
+
+		// Window Creation
 		GLFW.OpenWindow(SCR_WIDTH, SCR_HEIGHT, 8, 8, 8, 8, 24, 0, GLFW.WINDOWED);
 		GLFW.SetWindowTitle(WINDOW_TITLE);
-		GLFW.SwapInterval(false); // VSync
 
+		// VSync
+		GLFW.SwapInterval(false);
+
+		// Inputs
 		GLFW.SetKeyCallback((key, action) =>
 		{
 			bool press = action == 1;
@@ -64,6 +72,7 @@ static internal class Program
 
 		GLFW.SetWindowSizeCallback((int newWidth, int newHeight) =>
 		{
+			Console.WriteLine($"Window resized to {newWidth}x{newHeight}");
 			GL.Viewport(0, 0, newWidth, newHeight);
 			GL.Enable(GL.MULTISAMPLE);
 			GL.Enable(GL.TEXTURE_2D);
@@ -91,12 +100,12 @@ static internal class Program
 		GL.TexParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE_EXT);
 
 		UpdateGLTexture();
+
 		GL.BindTexture(GL.TEXTURE_2D, 0); //unbind texture
 	}
 
 	private static void UpdateGLTexture()
 	{
-		// load and generate the texture
 		Bitmap bitmap = new("assets/textures/container.jpg");
 
 		BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);

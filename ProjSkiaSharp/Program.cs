@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using SkiaSharp;
 using static Arqan.GL;
 using static Arqan.GLFW;
@@ -16,177 +15,120 @@ static internal class Program
 
 	private const int GL_INFO_LOG_SIZE = 512;
 
+	private static nint _window;
+	private static uint _shaderProgram;
+
+	private static readonly float[] Vertices =
+	{
+		// positions      // colors        // texture coords
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
+		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // right bottom
+		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // left bottom
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // left top
+	};
+
+	private static readonly uint[] Indices =
+	{
+		0, 1, 3, // first triangle
+		1, 2, 3, // second triangle
+	};
+
+	// Vertex Buffer Object
+	private static readonly uint[] VBO = new uint[1];
+	private static readonly uint[] VAO = new uint[1];
+	private static readonly uint[] EBO = new uint[1];
+
+	private static readonly uint[] Texture = new uint[1];
+
 	private static int Main(string[] args)
 	{
-		// GLFW: Initialize and Configure
-		int result = glfwInit();
-		if (result == 0) return -1;
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		if (!CreateWindow()) return -1;
 
-		// GLFW: Window Creation
-		nint window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, Encoding.UTF8.GetBytes(WINDOW_TITLE), 0, 0);
-		if (window == 0)
-		{
-			Console.WriteLine("Failed to create GLFW window");
-			glfwTerminate();
-			return -1;
-		}
+		SetupShaders();
 
-		glfwMakeContextCurrent(window);
-		glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-		glfwSwapInterval(0); // VSync
+		SetupVertices();
 
-		Console.WriteLine("GLFW window created");
+		CreateGLTexture();
 
-		// build and compile our shader program
-		uint shaderProgram = ShaderProgram("shader.vert", "shader.frag");
+		Run();
 
-		// Set up Vertex Data (and Buffer(s)) and Configure Vertex Attributes
-		float[] vertices =
-		{
-			// positions      // colors        // texture coords
-			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // right top
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // right bottom
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // left bottom
-			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // left top
-		};
+		Close();
 
-		uint[] indices =
-		{
-			0, 1, 3, // first triangle
-			1, 2, 3, // second triangle
-		};
-
-		// Vertex Buffer Object
-		uint[] vbo = new uint[1];
-		uint[] vao = new uint[1];
-		uint[] ebo = new uint[1];
-		glGenVertexArrays(1, vao);
-		glGenBuffers(1, vbo);
-		glGenBuffers(1, ebo);
-
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		glBindVertexArray(vao[0]);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, vertices.Length * sizeof(float), vertices, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL_STATIC_DRAW);
-
-		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), 0);
-		glEnableVertexAttribArray(0);
-		// color attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), 3 * sizeof(float));
-		glEnableVertexAttribArray(1);
-		// texture coord attribute
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), 6 * sizeof(float));
-		glEnableVertexAttribArray(2);
-
-		// load and create a texture
-		uint[] texture = new uint[1];
-		glGenTextures(1, texture);
-		glBindTexture(GL_TEXTURE_2D, texture[0]); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// load and generate the texture
-		SKBitmap bitmap = ReadResourceImage("container.jpg");
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap.Width, bitmap.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmap.GetPixels());
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		// Render Loop
-		double lastTime = glfwGetTime();
-		double fpsTimer = glfwGetTime();
-		while(glfwWindowShouldClose(window) != 1)
-		{
-			double deltaTime = glfwGetTime() - lastTime;
-			lastTime = glfwGetTime();
-			// Input
-			ProcessInput(window);
-
-			// Change Window Title to show FPS, every second
-			if (glfwGetTime() - fpsTimer >= 1.0)
-			{
-				glfwSetWindowTitle(window, $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
-				fpsTimer = glfwGetTime();
-			}
-
-			// Render
-			// Clear the screen
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			// Draw our textured square
-			glUseProgram(shaderProgram);
-			glBindVertexArray(vao[0]);
-			// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
-			// GLFW: Swap Buffers and Poll IO Events (keys pressed/released, mouse moved etc.)
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-		}
-
-		// Deallocate
-		glDeleteVertexArrays(1, vao);
-		glDeleteBuffers(1, vbo);
-		glDeleteProgram(shaderProgram);
-
-		glfwTerminate();
 		return 0;
 	}
 
-	private static void ProcessInput(nint window)
+	private static bool CreateWindow()
 	{
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetWindowShouldClose(window, 1);
+		// Initialisation
+		int result = glfwInit();
+		if (result == 0)
+		{
+			Console.WriteLine("Failed to initialize GLFW");
+			return false;
+		}
+
+		// Configuration
+		// > OpenGL 3.3 Core
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// > Multisampling
+		glfwWindowHint(GLFW_SAMPLES, 4);
+
+		// Window Creation
+		_window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, Encoding.UTF8.GetBytes(WINDOW_TITLE), 0, 0);
+		if (_window == 0)
+		{
+			Console.WriteLine("Failed to create GLFW window");
+			glfwTerminate();
+			return false;
+		}
+		glfwMakeContextCurrent(_window);
+
+		// VSync
+		glfwSwapInterval(0);
+
+		// Inputs
+		glfwSetKeyCallback(_window, (IntPtr window, int key, int _, int action, int _) =>
+		{
+			if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
+				glfwSetWindowShouldClose(window, 1);
+		});
+
+		glfwSetWindowSizeCallback(_window, WindowSizeCallback);
+		void WindowSizeCallback(IntPtr _, int newWidth, int newHeight)
+		{
+			Console.WriteLine($"Window resized to {newWidth}x{newHeight}");
+			glViewport(0, 0, newWidth, newHeight);
+			glEnable(GL_MULTISAMPLE);
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		}
+		//Apparently this isn't called by default anymore, so we need to call it manually
+		WindowSizeCallback(_window, SCR_WIDTH, SCR_HEIGHT);
+
+		Console.WriteLine("GLFW window created");
+		return true;
 	}
 
-	private static void FramebufferSizeCallback(nint window, int newWidth, int newHeight)
+	private static void SetupShaders()
 	{
-		glViewport(0, 0, newWidth, newHeight);
+		// build and compile our shader program
+		_shaderProgram = CreateShaderProgram("shader.vert", "shader.frag");
 	}
 
-	/// <exception cref="FileNotFoundException"></exception>
-	private static string ReadResourceText(string name)
-	{
-		Stream stream = ReadResourceStream(name);
-		using StreamReader reader = new(stream);
-		return reader.ReadToEnd();
-	}
-
-	/// <exception cref="FileNotFoundException"></exception>
-	private static SKBitmap ReadResourceImage(string name)
-	{
-		Stream stream = ReadResourceStream(name);
-		return SKBitmap.Decode(stream);
-	}
-
-	/// <exception cref="FileNotFoundException"></exception>
-	private static Stream ReadResourceStream(string name)
-	{
-		Assembly assembly = Assembly.GetExecutingAssembly();
-		string? resourcePath = assembly.GetManifestResourceNames().SingleOrDefault(str => str.EndsWith(name));
-		if (resourcePath == null) throw new FileNotFoundException(name);
-		return assembly.GetManifestResourceStream(resourcePath) ?? throw new FileNotFoundException(resourcePath);
-	}
-
-	private static uint ShaderProgram(string vertex, string fragment)
+	private static uint CreateShaderProgram(string vertex, string fragment)
 	{
 		// Build and Compile our Shader Program
-		string vertexShaderSource = ReadResourceText(vertex);
-		string fragmentShaderSource = ReadResourceText(fragment);
+		const string prepend = "assets/shaders/";
+		string vertexShaderSource = File.ReadAllText(prepend + vertex);
+		string fragmentShaderSource = File.ReadAllText(prepend + fragment);
+
 		// vertex shader
 		uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, new[] {vertexShaderSource,}, null);
+		glShaderSource(vertexShader, 1, new[] {vertexShaderSource}, null);
 		glCompileShader(vertexShader);
 		// check for shader compile errors
 		int success = 0;
@@ -201,7 +143,7 @@ static internal class Program
 
 		// fragment shader
 		uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource,}, null);
+		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource}, null);
 		glCompileShader(fragmentShader);
 		// check for shader compile errors
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, ref success);
@@ -234,5 +176,129 @@ static internal class Program
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 		return shaderProgram;
+	}
+
+	private static void SetupVertices()
+	{
+		// Set up Vertex Data (and Buffer(s)) and Configure Vertex Attributes
+		glGenVertexArrays(1, VAO);
+		glGenBuffers(1, VBO);
+		glGenBuffers(1, EBO);
+
+		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+		glBindVertexArray(VAO[0]);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+		glBufferData(GL_ARRAY_BUFFER, Vertices.Length * sizeof(float), Vertices, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.Length * sizeof(uint), Indices, GL_STATIC_DRAW);
+
+		// position attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
+		// color attribute
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), 3 * sizeof(float));
+		glEnableVertexAttribArray(1);
+		// texture coord attribute
+		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), 6 * sizeof(float));
+		glEnableVertexAttribArray(2);
+	}
+
+	private static void CreateGLTexture()
+	{
+		glGenTextures(1, Texture);
+
+		glBindTexture(GL_TEXTURE_2D, Texture[0]); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+
+		// set texture filtering parameters (not PixelArt)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// set the texture wrapping parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		UpdateGLTexture();
+
+		glBindTexture(GL_TEXTURE_2D, 0); //unbind texture
+	}
+
+	private static void UpdateGLTexture()
+	{
+		SKBitmap bitmap = BitmapFlipped(SKBitmap.Decode("assets/textures/container.jpg"));
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap.Width, bitmap.Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap.GetPixels());
+	}
+
+	private static SKBitmap BitmapFlipped(SKBitmap bitmap)
+	{
+		SKBitmap flipped = new(bitmap.Height, bitmap.Width);
+		using SKCanvas canvas = new(flipped);
+		canvas.Scale(1, -1, 0, bitmap.Height / 2.0f);
+		canvas.DrawBitmap(bitmap, 0, 0);
+		return flipped;
+	}
+
+	private static void Run()
+	{
+		glfwSetTime(0.0);
+
+		double lastTime = glfwGetTime();
+		double fpsTimer = glfwGetTime();
+		do
+		{
+			double deltaTime = glfwGetTime() - lastTime;
+			lastTime = glfwGetTime();
+
+			// Change Window Title to show FPS, every second
+			if (glfwGetTime() - fpsTimer >= 1.0)
+			{
+				glfwSetWindowTitle(_window, $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
+				fpsTimer = glfwGetTime();
+			}
+
+			Display();
+
+			glfwPollEvents();
+		} while(glfwWindowShouldClose(_window) != 1);
+	}
+
+	private static void Display()
+	{
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		RenderSelf();
+
+		// GLFW: Swap Buffers and Poll IO Events (keys pressed/released, mouse moved etc.)
+		glfwSwapBuffers(_window);
+	}
+
+	private static void RenderSelf()
+	{
+		glBindTexture(GL_TEXTURE_2D, Texture[0]);
+		DrawQuad();
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	private static void DrawQuad()
+	{
+		// Draw our textured square
+		glUseProgram(_shaderProgram);
+		glBindVertexArray(VAO[0]);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+	private static void Close()
+	{
+		// Deallocate
+		glDeleteVertexArrays(1, VAO);
+		glDeleteBuffers(1, VBO);
+		glDeleteProgram(_shaderProgram);
+		glDeleteTextures(1, Texture);
+
+		glfwTerminate();
 	}
 }
