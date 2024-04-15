@@ -31,6 +31,8 @@ static internal class Program
 
 	private static readonly int[] Texture = new int[1];
 
+	private static readonly byte[] Colour = {255, 255, 255, 255}; // RGBA
+
 	public static int Main(string[] args)
 	{
 		CreateWindow();
@@ -68,7 +70,7 @@ static internal class Program
 			GL.Enable(GL.BLEND);
 			GL.BlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
 			GL.Hint(GL.PERSPECTIVE_CORRECTION, GL.FASTEST);
-			GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		});
 
 		Console.WriteLine("GLFW window created");
@@ -129,7 +131,6 @@ static internal class Program
 	private static void Display()
 	{
 		// Clear the screen
-		GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		GL.Clear(GL.COLOR_BUFFER_BIT);
 
 		RenderSelf();
@@ -141,7 +142,7 @@ static internal class Program
 	private static void RenderSelf()
 	{
 		GL.BindTexture(GL.TEXTURE_2D, Texture[0]);
-		GL.Color4ub(255, 0, 255, 255);
+		GL.Color4ub(Colour[0], Colour[1], Colour[2], Colour[3]);
 		DrawQuad();
 		GL.Color4ub(255, 255, 255, 255);
 		GL.BindTexture(GL.TEXTURE_2D, 0); // unbind texture
