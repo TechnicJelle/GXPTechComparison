@@ -45,12 +45,11 @@
 		<Compile Include="Program.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="lib\glfw.dll">
+		<Content Include="assets\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-
-		<Content Include="container.jpg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<Content Include="lib\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
