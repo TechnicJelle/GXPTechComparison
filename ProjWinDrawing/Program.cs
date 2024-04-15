@@ -119,7 +119,7 @@ static internal class Program
 			if (GLFW.GetTime() - fpsTimer >= 1.0)
 			{
 				GLFW.SetWindowTitle($"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
-				fpsTimer -= GLFW.GetTime();
+				fpsTimer = GLFW.GetTime();
 			}
 
 			Display();
