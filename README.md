@@ -15,4 +15,5 @@ the latter is the technology we're interested in using for NeoGXP.
 | Language | C#	| C# |
 | Runtime |	.NET Framework 4.8 | .NET 8 |
 | OpenGL Version |	Legacy (1, I think?) | 3.3 |
+| GLFW Version | 2.6 | 3.3.2+ |
 | Image Loading |	System.Drawing | SkiaSharp |
