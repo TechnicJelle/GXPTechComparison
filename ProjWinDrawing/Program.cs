@@ -2,6 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using ProjWinDrawing.bindings;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace ProjWinDrawing;
 
@@ -12,6 +16,9 @@ static internal class Program
 	private const int SCR_HEIGHT = 600;
 
 	private const string WINDOW_TITLE = "ProjWinDrawing";
+
+	private static bool _benchmark = false;
+	private static readonly List<double> Milliseconds = new(25000); // 10 seconds at around 2500 fps
 
 	private static readonly float[] Vertices =
 	{
@@ -35,6 +42,8 @@ static internal class Program
 
 	public static int Main(string[] args)
 	{
+		if (args.Contains("benchmark")) _benchmark = true;
+
 		CreateWindow();
 
 		CreateGLTexture();
@@ -42,6 +51,12 @@ static internal class Program
 		Run();
 
 		Close();
+
+		if (_benchmark)
+		{
+			// save recorded frame times to a file
+			File.WriteAllLines("milliseconds_win.txt", Milliseconds.ConvertAll(d => d.ToString(CultureInfo.InvariantCulture)));
+		}
 
 		return 0;
 	}
@@ -127,11 +142,23 @@ static internal class Program
 			// Change Window Title to show FPS, every second
 			if (GLFW.GetTime() - fpsTimer >= 1.0)
 			{
-				GLFW.SetWindowTitle($"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
+				GLFW.SetWindowTitle($"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime) + " - Benchmarking: " + _benchmark + " - Time: " + Math.Round(GLFW.GetTime()));
 				fpsTimer = GLFW.GetTime();
 			}
 
 			Display();
+
+			if (_benchmark)
+			{
+				if (GLFW.GetTime() >= 11.0)
+				{
+					GLFW.CloseWindow();
+				}
+				else if (GLFW.GetTime() > 1.0) // skip the first second, to avoid the initial lag
+				{
+					Milliseconds.Add(deltaTime * 1000); // in milliseconds
+				}
+			}
 
 			GLFW.PollEvents();
 		} while(GLFW.GetWindowParam(GLFW.ACTIVE) == 1);

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using SkiaSharp;
+using System.Globalization;
 using static Arqan.GL;
 using static Arqan.GLFW;
 
@@ -13,25 +14,28 @@ static internal class Program
 
 	private const string WINDOW_TITLE = "ProjSkiaSharp";
 
+	private static bool _benchmark = false;
+	private static readonly List<double> Milliseconds = new(25000); // 10 seconds at around 2500 fps
+
 	private const int GL_INFO_LOG_SIZE = 512;
 
 	private static nint _window;
 	private static uint _shaderProgram;
 
 	private static readonly float[] Vertices =
-	{
+	[
 		// positions      // colors        // texture coords
 		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
 		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // right bottom
 		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // left bottom
 		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // left top
-	};
+	];
 
 	private static readonly uint[] Indices =
-	{
+	[
 		0, 1, 3, // first triangle
 		1, 2, 3, // second triangle
-	};
+	];
 
 	// Vertex Buffer Object
 	private static readonly uint[] VBO = new uint[1];
@@ -42,6 +46,8 @@ static internal class Program
 
 	private static int Main(string[] args)
 	{
+		if (args.Contains("benchmark")) _benchmark = true;
+
 		if (!CreateWindow()) return -1;
 
 		SetupShaders();
@@ -53,6 +59,12 @@ static internal class Program
 		Run();
 
 		Close();
+
+		if (_benchmark)
+		{
+			// save recorded frame times to a file
+			File.WriteAllLines("milliseconds_skia.txt", Milliseconds.ConvertAll(d => d.ToString(CultureInfo.InvariantCulture)));
+		}
 
 		return 0;
 	}
@@ -254,11 +266,23 @@ static internal class Program
 			// Change Window Title to show FPS, every second
 			if (glfwGetTime() - fpsTimer >= 1.0)
 			{
-				glfwSetWindowTitle(_window, $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime));
+				glfwSetWindowTitle(_window , $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime) + " - Benchmarking: " + _benchmark + " - Time: " + Math.Round(glfwGetTime()));
 				fpsTimer = glfwGetTime();
 			}
 
 			Display();
+
+			if (_benchmark)
+			{
+				if (glfwGetTime() >= 11.0)
+				{
+					glfwSetWindowShouldClose(_window, 1);
+				}
+				else if (glfwGetTime() > 1.0) // skip the first second, to avoid the initial lag
+				{
+					Milliseconds.Add(deltaTime * 1000); // in milliseconds
+				}
+			}
 
 			glfwPollEvents();
 		} while(glfwWindowShouldClose(_window) != 1);
