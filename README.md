@@ -17,3 +17,5 @@ the latter is the technology we're interested in using for NeoGXP.
 | OpenGL Version |	Legacy (1, I think?) | 3.3 |
 | GLFW Version | 2.6 | 3.3.2+ |
 | Image Loading |	System.Drawing | SkiaSharp |
+| Architecure | 32-bit | 64-bit |
+| Platform | Windows | Linux & Windows |
