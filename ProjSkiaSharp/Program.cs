@@ -129,6 +129,8 @@ static internal class Program
 	{
 		// build and compile our shader program
 		_shaderProgram = CreateShaderProgram("shader.vert", "shader.frag");
+		// now use the shader program
+		glUseProgram(_shaderProgram);
 	}
 
 	private static uint CreateShaderProgram(string vertex, string fragment)
@@ -182,8 +184,6 @@ static internal class Program
 			glGetProgramInfoLog(shaderProgram, GL_INFO_LOG_SIZE, ref logLength, infoLog);
 			Console.WriteLine("Shader Program Linking Failed:\n" + Encoding.UTF8.GetString(infoLog[..logLength]));
 		}
-
-		glUseProgram(shaderProgram);
 
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
@@ -309,7 +309,6 @@ static internal class Program
 	private static void DrawQuad()
 	{
 		// Draw our textured square
-		glUseProgram(_shaderProgram);
 		glBindVertexArray(VAO[0]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
