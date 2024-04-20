@@ -20,15 +20,17 @@ static internal class Program
 	private const int GL_INFO_LOG_SIZE = 512;
 
 	private static nint _window;
+
 	private static uint _shaderProgram;
+	private static uint _spriteColourLocation;
 
 	private static readonly float[] Vertices =
 	[
-		// positions      // colors        // texture coords
-		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // right top
-		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // right bottom
-		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // left bottom
-		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // left top
+		// positions      // texture coords
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // right top
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // right bottom
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // left bottom
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // left top
 	];
 
 	private static readonly uint[] Indices =
@@ -43,6 +45,8 @@ static internal class Program
 	private static readonly uint[] EBO = new uint[1];
 
 	private static readonly uint[] Texture = new uint[1];
+
+	private static readonly float[] Colour = [1.0f, 1.0f, 1.0f, 1.0f]; // RGBA
 
 	private static int Main(string[] args)
 	{
@@ -131,6 +135,9 @@ static internal class Program
 		_shaderProgram = CreateShaderProgram("shader.vert", "shader.frag");
 		// now use the shader program
 		glUseProgram(_shaderProgram);
+
+		_spriteColourLocation = glGetUniformLocation(_shaderProgram, "ourColour");
+
 	}
 
 	private static uint CreateShaderProgram(string vertex, string fragment)
@@ -142,7 +149,7 @@ static internal class Program
 
 		// vertex shader
 		uint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, new[] {vertexShaderSource}, null);
+		glShaderSource(vertexShader, 1, [vertexShaderSource], null);
 		glCompileShader(vertexShader);
 		// check for shader compile errors
 		int success = 0;
@@ -157,7 +164,7 @@ static internal class Program
 
 		// fragment shader
 		uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, new[] {fragmentShaderSource}, null);
+		glShaderSource(fragmentShader, 1, [fragmentShaderSource], null);
 		glCompileShader(fragmentShader);
 		// check for shader compile errors
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, ref success);
@@ -207,14 +214,11 @@ static internal class Program
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.Length * sizeof(uint), Indices, GL_STATIC_DRAW);
 
 		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
-		// color attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), 3 * sizeof(float));
-		glEnableVertexAttribArray(1);
 		// texture coord attribute
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), 6 * sizeof(float));
-		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), 3 * sizeof(float));
+		glEnableVertexAttribArray(1);
 	}
 
 	private static void CreateGLTexture()
@@ -266,7 +270,7 @@ static internal class Program
 			// Change Window Title to show FPS, every second
 			if (glfwGetTime() - fpsTimer >= 1.0)
 			{
-				glfwSetWindowTitle(_window , $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime) + " - Benchmarking: " + _benchmark + " - Time: " + Math.Round(glfwGetTime()));
+				glfwSetWindowTitle(_window, $"{WINDOW_TITLE} - FPS: " + Math.Round(1.0 / deltaTime) + " - Benchmarking: " + _benchmark + " - Time: " + Math.Round(glfwGetTime()));
 				fpsTimer = glfwGetTime();
 			}
 
@@ -302,6 +306,7 @@ static internal class Program
 	private static void RenderSelf()
 	{
 		glBindTexture(GL_TEXTURE_2D, Texture[0]);
+		glUniform4f(_spriteColourLocation, Colour[0], Colour[1], Colour[2], Colour[3]);
 		DrawQuad();
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
