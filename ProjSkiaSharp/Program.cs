@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using SkiaSharp;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using static Arqan.GL;
 using static Arqan.GLFW;
 
@@ -73,6 +74,54 @@ static internal class Program
 		return 0;
 	}
 
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	private delegate void GLDebugOutputCallback(uint source, uint type, uint id, uint severity, int length, IntPtr message, IntPtr userParam);
+
+	private static readonly GLDebugOutputCallback GLDebugOutput = (source, type, id, severity, length, message, param) =>
+	{
+		// ignore non-significant error/warning codes
+		if (id is 131169 or 131185 or 131218 or 131204)
+		{
+			// Console.WriteLine("Ignored Debug message: " + Marshal.PtrToStringAnsi(message, length));
+			return;
+		}
+
+		Console.WriteLine("---------------");
+		Console.WriteLine("Debug message (" + id + "): " + Marshal.PtrToStringAnsi(message, length));
+
+		switch (source)
+		{
+			case GL_DEBUG_SOURCE_API:            Console.Write("Source: API"); break;
+			case GL_DEBUG_SOURCE_WINDOW_SYSTEM:  Console.Write("Source: Window System"); break;
+			case GL_DEBUG_SOURCE_SHADER_COMPILER:Console.Write("Source: Shader Compiler"); break;
+			case GL_DEBUG_SOURCE_THIRD_PARTY:    Console.Write("Source: Third Party"); break;
+			case GL_DEBUG_SOURCE_APPLICATION:    Console.Write("Source: Application"); break;
+			case GL_DEBUG_SOURCE_OTHER:          Console.Write("Source: Other"); break;
+		} Console.WriteLine();
+
+		switch (type)
+		{
+			case GL_DEBUG_TYPE_ERROR:               Console.Write("Type: Error"); break;
+			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: Console.Write("Type: Deprecated Behaviour"); break;
+			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  Console.Write("Type: Undefined Behaviour"); break;
+			case GL_DEBUG_TYPE_PORTABILITY:         Console.Write("Type: Portability"); break;
+			case GL_DEBUG_TYPE_PERFORMANCE:         Console.Write("Type: Performance"); break;
+			case GL_DEBUG_TYPE_MARKER:              Console.Write("Type: Marker"); break;
+			case GL_DEBUG_TYPE_PUSH_GROUP:          Console.Write("Type: Push Group"); break;
+			case GL_DEBUG_TYPE_POP_GROUP:           Console.Write("Type: Pop Group"); break;
+			case GL_DEBUG_TYPE_OTHER:               Console.Write("Type: Other"); break;
+		} Console.WriteLine();
+
+		switch (severity)
+		{
+			case GL_DEBUG_SEVERITY_HIGH:         Console.Write("Severity: high"); break;
+			case GL_DEBUG_SEVERITY_MEDIUM:       Console.Write("Severity: medium"); break;
+			case GL_DEBUG_SEVERITY_LOW:          Console.Write("Severity: low"); break;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: Console.Write("Severity: notification"); break;
+		} Console.WriteLine();
+		Console.WriteLine();
+	};
+
 	private static bool CreateWindow()
 	{
 		// Initialisation
@@ -85,11 +134,15 @@ static internal class Program
 
 		// Configuration
 		// > OpenGL 3.3 Core
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		// > Multisampling
 		glfwWindowHint(GLFW_SAMPLES, 4);
+#if DEBUG
+		// > Debug
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
+#endif
 
 		// Window Creation
 		_window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, Encoding.UTF8.GetBytes(WINDOW_TITLE), 0, 0);
@@ -126,6 +179,20 @@ static internal class Program
 		WindowSizeCallback(_window, SCR_WIDTH, SCR_HEIGHT);
 
 		Console.WriteLine("GLFW window created");
+
+		// Setting up debug stuff
+		int[] flags = new int[1];
+		glGetIntegerv(GL_CONTEXT_FLAGS, flags);
+		if (flags[0] == GL_CONTEXT_FLAG_DEBUG_BIT)
+		{
+			Console.WriteLine("Debug Context");
+			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+			glDebugMessageCallback(Marshal.GetFunctionPointerForDelegate(GLDebugOutput), 0);
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, null, true);
+		}
+
 		return true;
 	}
 
@@ -296,6 +363,8 @@ static internal class Program
 	{
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT);
+		uint error = glGetError();
+		if (error != 0) Console.WriteLine("gl error: " + error);
 
 		RenderSelf();
 
