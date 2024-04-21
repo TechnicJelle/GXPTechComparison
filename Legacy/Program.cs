@@ -55,7 +55,7 @@ static internal class Program
 		if (_benchmark)
 		{
 			// save recorded frame times to a file
-			File.WriteAllLines("milliseconds_win.txt", Milliseconds.ConvertAll(d => d.ToString(CultureInfo.InvariantCulture)));
+			File.WriteAllLines("milliseconds_legacy.txt", Milliseconds.ConvertAll(d => d.ToString(CultureInfo.InvariantCulture)));
 		}
 
 		return 0;
