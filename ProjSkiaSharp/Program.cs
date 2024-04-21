@@ -26,11 +26,11 @@ static internal class Program
 
 	private static readonly float[] Vertices =
 	[
-		// positions      // texture coords
-		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // right top
-		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // right bottom
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // left bottom
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // left top
+		// positions // texture coords
+		0.5f, 0.5f, 1.0f, 1.0f, // right top
+		0.5f, -0.5f, 1.0f, 0.0f, // right bottom
+		-0.5f, -0.5f, 0.0f, 0.0f, // left bottom
+		-0.5f, 0.5f, 0.0f, 1.0f, // left top
 	];
 
 	private static readonly uint[] Indices =
@@ -214,10 +214,10 @@ static internal class Program
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.Length * sizeof(uint), Indices, GL_STATIC_DRAW);
 
 		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), 0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
 		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), 3 * sizeof(float));
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), 2 * sizeof(float));
 		glEnableVertexAttribArray(1);
 	}
 
