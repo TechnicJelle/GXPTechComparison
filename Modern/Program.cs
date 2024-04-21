@@ -249,7 +249,7 @@ static internal class Program
 
 	private static SKBitmap BitmapFlipped(SKBitmap bitmap)
 	{
-		SKBitmap flipped = new(bitmap.Height, bitmap.Width);
+		SKBitmap flipped = new(bitmap.Width, bitmap.Height);
 		using SKCanvas canvas = new(flipped);
 		canvas.Scale(1, -1, 0, bitmap.Height / 2.0f);
 		canvas.DrawBitmap(bitmap, 0, 0);
