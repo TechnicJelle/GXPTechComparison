@@ -1,10 +1,10 @@
-﻿using System.Text;
-using SkiaSharp;
+﻿using SkiaSharp;
 using System.Globalization;
+using System.Text;
 using static Arqan.GL;
 using static Arqan.GLFW;
 
-namespace ProjSkiaSharp;
+namespace Modern;
 
 static internal class Program
 {
@@ -12,7 +12,7 @@ static internal class Program
 	private const int SCR_WIDTH = 800;
 	private const int SCR_HEIGHT = 600;
 
-	private const string WINDOW_TITLE = "ProjSkiaSharp";
+	private const string WINDOW_TITLE = "Project Modern";
 
 	private static bool _benchmark = false;
 	private static readonly List<double> Milliseconds = new(25000); // 10 seconds at around 2500 fps

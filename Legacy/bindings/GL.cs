@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace ProjWinDrawing.bindings;
+namespace Legacy.bindings;
 
 public static class GL
 {

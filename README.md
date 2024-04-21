@@ -10,12 +10,15 @@ The former is the technology currently used in the GXP Engine,
 the latter is the technology we're interested in using for NeoGXP.
 
 ## Project Differences
-| Project | Win | Skia |
-| ------- | --- | ---- |
-| Language | C#	| C# |
-| Runtime |	.NET Framework 4.8 | .NET 8 |
-| OpenGL Version |	Legacy (1, I think?) | 3.3 |
-| GLFW Version | 2.6 | 3.3.2+ |
-| Image Loading |	System.Drawing | SkiaSharp |
-| Architecure | 32-bit | 64-bit |
-| Platform | Windows | Linux & Windows |
+| Project        | Legacy               | Modern          |
+|----------------|----------------------|-----------------|
+| Language       | C#                   | C#              |
+| Runtime        | .NET Framework 4.8   | .NET 8          |
+| OpenGL Version | Legacy (1, I think?) | 3.3             |
+| GLFW Version   | 2.6                  | 3.3.2+          |
+| Image Loading  | System.Drawing       | SkiaSharp       |
+| Architecture   | 32-bit               | 64-bit          |
+| Platform       | Windows              | Linux & Windows |
+
+Project Legacy used to be called "ProjWinDrawing", and Project Modern used to be called "ProjSkiaSharp".  
+I have changed the names to better suit the slightly larger comparison scope.
