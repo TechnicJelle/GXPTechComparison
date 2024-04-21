@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+// ReSharper disable UnusedMember.Global
 
 namespace Legacy.bindings;
 

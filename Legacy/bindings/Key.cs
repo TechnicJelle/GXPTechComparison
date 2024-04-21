@@ -1,3 +1,4 @@
+// ReSharper disable UnusedMember.Global
 namespace Legacy.bindings;
 
 public static class Key
