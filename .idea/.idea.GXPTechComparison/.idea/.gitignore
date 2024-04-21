@@ -1,8 +1,8 @@
-# Default ignored files
+﻿# Default ignored files
 /shelf/
 /workspace.xml
 # Rider ignored files
-/contentModel.xml
 /projectSettingsUpdater.xml
-/.idea.ProjSkiaSharp.iml
 /modules.xml
+/.idea.GXPTechComparison.iml
+/contentModel.xml

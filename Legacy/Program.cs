@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using ProjWinDrawing.bindings;
+using Legacy.bindings;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace ProjWinDrawing;
+namespace Legacy;
 
 static internal class Program
 {
@@ -15,30 +15,30 @@ static internal class Program
 	private const int SCR_WIDTH = 800;
 	private const int SCR_HEIGHT = 600;
 
-	private const string WINDOW_TITLE = "ProjWinDrawing";
+	private const string WINDOW_TITLE = "Project Legacy";
 
 	private static bool _benchmark = false;
 	private static readonly List<double> Milliseconds = new(25000); // 10 seconds at around 2500 fps
 
 	private static readonly float[] Vertices =
-	{
+	[
 		-0.5f, 0.5f, // left top
 		0.5f, 0.5f, // right top
 		0.5f, -0.5f, // right bottom
 		-0.5f, -0.5f, // left bottom
-	};
+	];
 
 	private static readonly float[] UVs =
-	{
+	[
 		0.0f, 0.0f, // left top
 		1.0f, 0.0f, // right top
 		1.0f, 1.0f, // right bottom
 		0.0f, 1.0f, // left bottom
-	};
+	];
 
 	private static readonly int[] Texture = new int[1];
 
-	private static readonly byte[] Colour = {255, 255, 255, 255}; // RGBA
+	private static readonly byte[] Colour = [255, 255, 255, 255]; // RGBA
 
 	public static int Main(string[] args)
 	{

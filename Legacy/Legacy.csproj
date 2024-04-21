@@ -6,17 +6,17 @@
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 		<ProjectGuid>{195EE532-A115-4CC4-9330-74D6F9061C76}</ProjectGuid>
 		<OutputType>Exe</OutputType>
-		<RootNamespace>ProjWinDrawing</RootNamespace>
-		<AssemblyName>ProjWinDrawing</AssemblyName>
+		<RootNamespace>Legacy</RootNamespace>
+		<AssemblyName>Legacy</AssemblyName>
 		<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
 		<FileAlignment>512</FileAlignment>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<LangVersion>10</LangVersion>
+		<LangVersion>default</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
+		<PlatformTarget>x86</PlatformTarget>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<Optimize>false</Optimize>
@@ -26,7 +26,7 @@
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
+		<PlatformTarget>x86</PlatformTarget>
 		<DebugType>pdbonly</DebugType>
 		<Optimize>true</Optimize>
 		<OutputPath>bin\Release\</OutputPath>

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security;
 
-namespace ProjWinDrawing.bindings;
+namespace Legacy.bindings;
 
 public static class GLFW
 {

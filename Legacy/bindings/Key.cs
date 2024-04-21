@@ -1,4 +1,4 @@
-namespace ProjWinDrawing.bindings;
+namespace Legacy.bindings;
 
 public static class Key
 {
