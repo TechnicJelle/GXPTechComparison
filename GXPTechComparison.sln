@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Legacy", "Legacy\Legacy.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modern", "Modern\Modern.csproj", "{D421503B-7B2F-4608-90E0-78635456BAF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchSkiaSharp", "BenchSkiaSharp\BenchSkiaSharp.csproj", "{53097E5F-7A6A-4883-9F76-39F75128A76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchSysDrawing", "BenchSysDrawing\BenchSysDrawing.csproj", "{22B2BCF9-CBCF-4F01-B959-5F008F571A7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{D421503B-7B2F-4608-90E0-78635456BAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D421503B-7B2F-4608-90E0-78635456BAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D421503B-7B2F-4608-90E0-78635456BAF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53097E5F-7A6A-4883-9F76-39F75128A76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53097E5F-7A6A-4883-9F76-39F75128A76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53097E5F-7A6A-4883-9F76-39F75128A76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53097E5F-7A6A-4883-9F76-39F75128A76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B2BCF9-CBCF-4F01-B959-5F008F571A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B2BCF9-CBCF-4F01-B959-5F008F571A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B2BCF9-CBCF-4F01-B959-5F008F571A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B2BCF9-CBCF-4F01-B959-5F008F571A7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
