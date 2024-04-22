@@ -6,6 +6,9 @@ on:
 jobs:
   BenchSkiaSharp:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./BenchSkiaSharp
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,14 +24,16 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Run the benchmark
-      working-directory: ./BenchSkiaSharp
       run: dotnet run -c Release
 
     - name: Print output
-      run: cat ./BenchSkiaSharp/BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+      run: cat ./BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
   BenchSysDrawing:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./BenchSysDrawing
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -41,12 +46,14 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Get dependencies (dotnet restore)
-      working-directory: ./BenchSysDrawing
       run: dotnet restore
 
+    - name: Build the benchmark
+      run: MSBuild.exe
+
     - name: Run the benchmark
-      working-directory: ./BenchSysDrawing
-      run: dotnet run -c Release
+      working-directory: ./bin/Release
+      run: ./BenchSysDrawing.exe
 
 #    - name: Print output
 #      run: cat ./BenchSysDrawing/BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
