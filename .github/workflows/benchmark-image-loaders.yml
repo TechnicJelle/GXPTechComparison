@@ -46,10 +46,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Get dependencies (dotnet restore)
-      run: dotnet restore
+      run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true
 
     - name: Build the benchmark
-      run: MSBuild.exe -target:"Restore;Build" -property:Configuration=Release
+      run: MSBuild.exe -target:Build -property:Configuration=Release
 
     - name: Run the benchmark
       working-directory: ./BenchSysDrawing/bin/Release
