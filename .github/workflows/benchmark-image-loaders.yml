@@ -25,4 +25,4 @@ jobs:
       run: dotnet run -c Release
 
     - name: Print output
-      run: cat ./BenchSkiaSharp/BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md >> $GITHUB_STEP_SUMMARY
+      run: cat ./BenchSkiaSharp/BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
