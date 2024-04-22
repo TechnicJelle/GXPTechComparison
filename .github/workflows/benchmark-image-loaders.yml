@@ -49,7 +49,7 @@ jobs:
       run: dotnet restore
 
     - name: Build the benchmark
-      run: MSBuild.exe
+      run: MSBuild.exe -target Build -property:Configuration=Release
 
     - name: Run the benchmark
       working-directory: ./bin/Release
