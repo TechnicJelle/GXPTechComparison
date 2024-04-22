@@ -46,7 +46,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Get dependencies (Restore)
-      run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true -property:SolutionDir="D:\a\GXPTechComparison\GXPTechComparison"
+      run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true -property:SolutionDir="../."
 
     - name: Build the benchmark
       run: MSBuild.exe -target:Build -property:Configuration=Release
