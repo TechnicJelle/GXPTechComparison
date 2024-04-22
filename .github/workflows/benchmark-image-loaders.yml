@@ -45,11 +45,11 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
-    - name: Get dependencies (dotnet restore)
-      run: dotnet restore
+    - name: Get dependencies (Restore)
+      run: MSBuild.exe -restore -p:RestorePackagesConfig=true -p:SolutionDir="D:\a\GXPTechComparison\GXPTechComparison"
 
     - name: Build the benchmark
-      run: MSBuild.exe -target:Build -restore -p:RestorePackagesConfig=true -p:SolutionDir="D:\a\GXPTechComparison\GXPTechComparison" -property:Configuration=Release
+      run: MSBuild.exe -target:Build -property:Configuration=Release
 
     - name: Run the benchmark
       working-directory: ./BenchSysDrawing/bin/Release
