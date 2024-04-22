@@ -47,6 +47,7 @@ jobs:
 
     - name: Get dependencies (Restore)
       run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true -property:SolutionDir="${{ github.workspace }}"
+      # I don't know why it needs the solution directory, but if it wants it, it can get it...
 
     - name: Build the benchmark
       run: MSBuild.exe -target:Build -property:Configuration=Release
