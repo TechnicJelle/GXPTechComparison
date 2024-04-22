@@ -52,7 +52,7 @@ jobs:
       run: MSBuild.exe -target:Build -property:Configuration=Release
 
     - name: Run the benchmark
-      working-directory: ./bin/Release
+      working-directory: ./BenchSysDrawing/bin/Release
       run: ./BenchSysDrawing.exe
 
 #    - name: Print output
