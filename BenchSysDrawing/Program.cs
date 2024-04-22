@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -6,6 +8,7 @@ namespace BenchSysDrawing;
 
 public class ImageLoader
 {
+	[Benchmark]
 	public IntPtr LoadImageAndGetPixels()
 	{
 		Bitmap bitmap = new("assets/textures/container.jpg");
@@ -20,5 +23,6 @@ static internal class Program
 	private static void Main(string[] args)
 	{
 		Console.WriteLine(new ImageLoader().LoadImageAndGetPixels()); //make sure it works first
-	}
+        BenchmarkRunner.Run<ImageLoader>();
+    }
 }
