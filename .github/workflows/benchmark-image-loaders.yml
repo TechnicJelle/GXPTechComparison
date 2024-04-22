@@ -53,8 +53,7 @@ jobs:
       run: MSBuild.exe -target:Build -property:Configuration=Release
 
     - name: Run the benchmark
-      working-directory: ./BenchSysDrawing/bin/Release
-      run: ./BenchSysDrawing.exe
+      run: ./bin/Release/BenchSysDrawing.exe
 
     - name: Print output
       run: cat ./BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
