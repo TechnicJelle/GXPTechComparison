@@ -26,3 +26,26 @@ jobs:
 
     - name: Print output
       run: cat ./BenchSkiaSharp/BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+  BenchWinDrawing:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 4.8.x
+
+    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Run the benchmark
+      working-directory: ./BenchWinDrawing
+      run: dotnet run -c Release
+
+    - name: Print output
+      run: cat ./BenchWinDrawing/BenchmarkDotNet.Artifacts/results/BenchWinDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
