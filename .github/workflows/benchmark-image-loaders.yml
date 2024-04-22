@@ -6,6 +6,9 @@ on:
 jobs:
   BenchSkiaSharp:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./BenchSkiaSharp
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,32 +24,36 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Run the benchmark
-      working-directory: ./BenchSkiaSharp
       run: dotnet run -c Release
 
     - name: Print output
-      run: cat ./BenchSkiaSharp/BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+      run: cat ./BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
-#  BenchWinDrawing:
-#    runs-on: windows-latest
-#    steps:
-#    - name: Checkout
-#      uses: actions/checkout@v4
-#
-#    # .NET Framework 4.8 is already pre-installed :)
-#    #  https://github.com/actions/runner-images/blob/16c64c111cb6372bf8949332d275b74c87d33075/images/windows/Windows2022-Readme.md#net-core-tools
-#
-#    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-#    - name: Setup MSBuild.exe
-#      uses: microsoft/setup-msbuild@v2
-#
-#    - name: Get dependencies (dotnet restore)
-#      working-directory: ./BenchWinDrawing
-#      run: dotnet restore
-#
-#    - name: Run the benchmark
-#      working-directory: ./BenchWinDrawing
-#      run: dotnet run -c Release
-#
-#    - name: Print output
-#      run: cat ./BenchWinDrawing/BenchmarkDotNet.Artifacts/results/BenchWinDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+  BenchSysDrawing:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./BenchSysDrawing
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # .NET Framework 4.8 is already pre-installed :)
+    #  https://github.com/actions/runner-images/blob/16c64c111cb6372bf8949332d275b74c87d33075/images/windows/Windows2022-Readme.md#net-core-tools
+
+    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Get dependencies (Restore)
+      run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true -property:SolutionDir="${{ github.workspace }}"
+      # I don't know why it needs the solution directory, but if it wants it, it can get it...
+
+    - name: Build the benchmark
+      run: MSBuild.exe -target:Build -property:Configuration=Release
+
+    - name: Run the benchmark
+      run: ./bin/Release/BenchSysDrawing.exe
+
+    - name: Print output
+      run: cat ./BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
