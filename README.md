@@ -1,5 +1,7 @@
 # GXP Tech Comparison
-For my "Advanced Tools" course at Saxion CMGT.
+I've been planning on modernising the GXP Engine for a while now.  
+So this project is a comparison between the current technology stack and a new proposed technology stack.  
+This was done for my "Advanced Tools" course at Saxion CMGT.
 
 ## Evaluation proposal
 I want to compare the (graphics) performance of
