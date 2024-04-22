@@ -49,7 +49,7 @@ jobs:
       run: dotnet restore
 
     - name: Build the benchmark
-      run: MSBuild.exe -target:Build -restore -p:RestorePackagesConfig=true -p:SolutionDir=.. -property:Configuration=Release
+      run: MSBuild.exe -target:Build -restore -p:RestorePackagesConfig=true -p:SolutionDir="D:\a\GXPTechComparison\GXPTechComparison" -property:Configuration=Release
 
     - name: Run the benchmark
       working-directory: ./BenchSysDrawing/bin/Release
