@@ -1,0 +1,59 @@
+name: Benchmark Graphics Programs
+
+on:
+  push:
+
+jobs:
+  BenchSkiaSharp:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./Modern
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Run the benchmark
+      run: dotnet run -c Release benchmark
+
+    - name: Print output
+      run: cat ./milliseconds_modern.txt
+
+  BenchSysDrawing:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./Legacy
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # .NET Framework 4.8 is already pre-installed :)
+    #  https://github.com/actions/runner-images/blob/16c64c111cb6372bf8949332d275b74c87d33075/images/windows/Windows2022-Readme.md#net-core-tools
+
+    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Get dependencies (Restore)
+      run: MSBuild.exe -target:Restore -property:RestorePackagesConfig=true -property:SolutionDir="${{ github.workspace }}"
+      # I don't know why it needs the solution directory, but if it wants it, it can get it...
+
+    - name: Build the benchmark
+      run: MSBuild.exe -target:Build -property:Configuration=Release
+
+    - name: Run the benchmark
+      run: ./bin/Release/Legacy.exe benchmark
+
+    - name: Print output
+      run: cat ./milliseconds_legacy.txt
