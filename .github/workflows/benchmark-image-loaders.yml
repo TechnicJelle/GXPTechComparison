@@ -80,6 +80,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Install Python dependencies
+      run: pip install numpy matplotlib
+
     - name: Run Python script
       run: python benches.py
 
