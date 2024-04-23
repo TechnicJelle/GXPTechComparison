@@ -29,6 +29,12 @@ jobs:
     - name: Print output
       run: cat ./BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
+    - name: Upload benchmark report CSV
+      uses: actions/upload-artifact@v4
+      with:
+        name: BenchSkiaSharp.ImageLoader-report.csv
+        path: ./BenchmarkDotNet.Artifacts/results/BenchSkiaSharp.ImageLoader-report.csv
+
   BenchSysDrawing:
     runs-on: windows-latest
     defaults:
@@ -57,3 +63,10 @@ jobs:
 
     - name: Print output
       run: cat ./BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report-github.md | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+    - name: Upload benchmark report CSV
+      uses: actions/upload-artifact@v4
+      with:
+        name: BenchSysDrawing.ImageLoader-report.csv
+        path: ./BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report.csv
+
