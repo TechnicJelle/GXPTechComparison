@@ -70,3 +70,18 @@ jobs:
         name: BenchSysDrawing.ImageLoader-report.csv
         path: ./BenchSysDrawing/BenchmarkDotNet.Artifacts/results/BenchSysDrawing.ImageLoader-report.csv
 
+  Plot:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./github/plot_scripts
+    needs: [BenchSkiaSharp, BenchSysDrawing]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Run Python script
+      run: python benches.py
+
+    - name: Tree
+      run: tree
