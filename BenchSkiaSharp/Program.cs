@@ -12,20 +12,9 @@ public class ImageLoader
 	[Benchmark]
 	public IntPtr LoadImageAndGetPixels()
 	{
-		SKBitmap original = SKBitmap.Decode("assets/textures/container.jpg");
-		original.SetImmutable();
-		SKBitmap flipped = BitmapFlipped(original);
-		flipped.SetImmutable();
-		return flipped.GetPixels();
-	}
-
-	private static SKBitmap BitmapFlipped(SKBitmap bitmap)
-	{
-		SKBitmap flipped = new(bitmap.Width, bitmap.Height);
-		using SKCanvas canvas = new(flipped);
-		canvas.Scale(1, -1, 0, bitmap.Height / 2.0f);
-		canvas.DrawBitmap(bitmap, 0, 0);
-		return flipped;
+		SKBitmap bitmap = SKBitmap.Decode("assets/textures/container.jpg");
+		bitmap.SetImmutable();
+		return bitmap.GetPixels();
 	}
 }
 

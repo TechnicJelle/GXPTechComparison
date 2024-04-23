@@ -28,6 +28,7 @@ static internal class Program
 		-0.5f, -0.5f, // left bottom
 	];
 
+	// These are flipped! (Origin is in the top left)
 	private static readonly float[] UVs =
 	[
 		0.0f, 0.0f, // left top
@@ -121,7 +122,7 @@ static internal class Program
 
 	private static void UpdateGLTexture()
 	{
-		Bitmap bitmap = new("assets/textures/container.jpg");
+		Bitmap bitmap = new("assets/textures/awesomeface.png");
 
 		BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 		GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, bitmap.Width, bitmap.Height, 0, GL.BGRA, GL.UNSIGNED_BYTE, data.Scan0);

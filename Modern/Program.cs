@@ -24,13 +24,14 @@ static internal class Program
 	private static uint _shaderProgram;
 	private static uint _spriteColourLocation;
 
+	// These are flipped! (Origin is in the top left)
 	private static readonly float[] Vertices =
 	[
 		// positions // texture coords
-		0.5f, 0.5f, 1.0f, 1.0f, // right top
-		0.5f, -0.5f, 1.0f, 0.0f, // right bottom
-		-0.5f, -0.5f, 0.0f, 0.0f, // left bottom
-		-0.5f, 0.5f, 0.0f, 1.0f, // left top
+		0.5f, 0.5f, 1.0f, 0.0f, // right top
+		0.5f, -0.5f, 1.0f, 1.0f, // right bottom
+		-0.5f, -0.5f, 0.0f, 1.0f, // left bottom
+		-0.5f, 0.5f, 0.0f, 0.0f, // left top
 	];
 
 	private static readonly uint[] Indices =
@@ -242,18 +243,9 @@ static internal class Program
 
 	private static void UpdateGLTexture()
 	{
-		SKBitmap bitmap = BitmapFlipped(SKBitmap.Decode("assets/textures/container.jpg"));
+		SKBitmap bitmap = SKBitmap.Decode("assets/textures/awesomeface.png");
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap.Width, bitmap.Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap.GetPixels());
-	}
-
-	private static SKBitmap BitmapFlipped(SKBitmap bitmap)
-	{
-		SKBitmap flipped = new(bitmap.Width, bitmap.Height);
-		using SKCanvas canvas = new(flipped);
-		canvas.Scale(1, -1, 0, bitmap.Height / 2.0f);
-		canvas.DrawBitmap(bitmap, 0, 0);
-		return flipped;
 	}
 
 	private static void Run()
