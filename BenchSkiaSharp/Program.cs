@@ -12,8 +12,11 @@ public class ImageLoader
 	[Benchmark]
 	public IntPtr LoadImageAndGetPixels()
 	{
-		SKBitmap bitmap = BitmapFlipped(SKBitmap.Decode("assets/textures/container.jpg"));
-		return bitmap.GetPixels();
+		SKBitmap original = SKBitmap.Decode("assets/textures/container.jpg");
+		original.SetImmutable();
+		SKBitmap flipped = BitmapFlipped(original);
+		flipped.SetImmutable();
+		return flipped.GetPixels();
 	}
 
 	private static SKBitmap BitmapFlipped(SKBitmap bitmap)
