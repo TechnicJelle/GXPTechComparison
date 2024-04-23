@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./github/plot_scripts
+        working-directory: ./.github/plot_scripts
     needs: [BenchSkiaSharp, BenchSysDrawing]
     steps:
     - name: Checkout
