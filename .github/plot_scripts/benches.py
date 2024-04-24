@@ -10,9 +10,9 @@ sdStd = float(str(BenchSysDrawing["StdDev"]).strip("ms"))
 ssMean = float(str(BenchSkiaSharp["Mean"]).strip("ms"))
 ssStd = float(str(BenchSkiaSharp["StdDev"]).strip("ms"))
 
-capsize=5
-plt.bar("System.Drawing", sdMean, yerr=sdStd, capsize=capsize)
-plt.bar("SkiaSharp", ssMean, yerr=ssStd, capsize=capsize)
+capsize=10
+plt.bar(f"System.Drawing\n({sdMean} ms)", sdMean, yerr=sdStd, capsize=capsize)
+plt.bar(f"SkiaSharp\n({ssMean} ms)", ssMean, yerr=ssStd, capsize=capsize)
 
 plt.ylabel("ms to load image")
 
