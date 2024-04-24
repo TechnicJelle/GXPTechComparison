@@ -13,6 +13,7 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
   * [Experiences](#experiences)
     * [On Legacy OpenGL](#on-legacy-opengl)
     * [On .NET Framework](#on-net-framework)
+    * [Graphics programs performance analysis](#graphics-programs-performance-analysis)
   * [Conclusion](#conclusion)
   * [References](#references)
 <!-- TOC -->
@@ -203,6 +204,60 @@ Thankfully, I managed to get it to work in the end with a lot of help from frien
 but it was not a pleasant experience at all.
 
 One more reason to move to .NET 8.
+
+### Graphics programs performance analysis
+During the development of this project, I have learned a lot about performance analysis for graphics programs.
+
+I already knew of Renderdoc and Nsight, but I had never used them before.
+
+But when rewriting the Legacy project to use Modern OpenGL, I just couldn't get it to be faster.
+Or even the same speed. It was always slower.
+I had no idea why, and so I turned to Renderdoc to help me figure it out.
+However, Renderdoc didn't work with the Legacy project, because it does not support Legacy OpenGL.
+
+And so I turned to Nsight, which does support Legacy OpenGL.
+But it didn't support 32-bit applications, which the Legacy project was.
+Initially, I tried rewriting it to be 64-bit, but that was a huge hassle.
+I had to change the csproj file, to build to x64, and then I had to change the GLFW bindings to be 64-bit.
+But I couldn't just download the 64-bit GLFW DLLs,
+because I didn't know which version of GLFW the Legacy project was actually using!
+Only by looking through the DLL with a hex editor did I find out that it was using GLFW 2.6.
+There were no binaries to download for that ancient version, so I had to build them myself.
+After downloading a copy of the source code from SourceForge, I had to build it with make.
+I finally managed to do that with the Visual Studio Developer PowerShell,
+but it only built as a 32-bit DLL...
+So that was a dead end.
+
+I got the bright idea to just use an older version of Nsight that _did_ still support 32-bit applications.
+After looking through the release notes of a bunch of versions, I finally found one that did: 2021.4.2.
+
+After installing that, I finally managed to start the Legacy project with Nsight, and make a connection to it.
+However, somehow, the connection was only half-working.
+Ironically, exactly the half that I didn't need...
+
+A couple of days later, I did manage to make a connection, though!
+And so I was able to compare the performance of the two projects side-by-side, using the profiling tools in Nsight.
+
+![A screenshot of Nsight with the Legacy project open](./.github/readme_assets/nsight-legacy.png)
+
+![A screenshot of Nsight with the Modern project open](./.github/readme_assets/nsight-modern.png)
+
+Even though the Modern code was less total OpenGL instructions, it was still slower.
+
+I saw that I was setting the shader program every frame, which was unnecessary, as I only have one to begin with.
+So I optimised that out
+([commit](https://github.com/TechnicJelle/GXPTechComparison/commit/27eb9a4f5a36933948ef93c100c3ec8683a42f71)),
+but it made little difference.
+
+Ultimately, I found out that the issue lay in the amount of data I was sending to the GPU.
+In the Legacy project, it only sends the vertex position as a 2D vector, and the texture coordinates as a 2D vector,
+and the colour was set for the entire object.  
+While in the Modern project, I was sending the vertex position as a 3D vector, the texture coordinates as a 2D vector,
+and the colour as a 3D vector for every single vertex.  
+By optimising the Modern project to only send the data that was actually needed,
+I managed to get it to be faster than the Legacy project! 
+([commit1](https://github.com/TechnicJelle/GXPTechComparison/commit/8d1e09d6954a7954f84db669b824b6dff7db1aac),
+[commit2](https://github.com/TechnicJelle/GXPTechComparison/commit/1c02ec0bacf19b8734e664d8d43f89a65686ec1c))
 
 ## Conclusion
 The Modern technology stack is generally more performant than the Legacy technology stack.
