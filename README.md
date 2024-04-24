@@ -29,8 +29,7 @@ the latter is the technology we're interested in using for NeoGXP.
 To compare these two technology stacks, I have created two projects:  
 One project uses the [Legacy](./Legacy) technology stack, the other uses the [Modern](./Modern) technology stack.
 
-I have also created two other projects for benchmarking specifically
-the image loading aspect of the two technology stacks,
+I have also created two other projects for benchmarking the image loading aspect of the two technology stacks,
 which you can find in [BenchSysDrawing](./BenchSysDrawing) and [BenchSkiaSharp](./BenchSkiaSharp).
 
 ## Project Differences
@@ -73,7 +72,7 @@ Here are the relevant parts of the code that logs the delta times:
 ```csharp
 // The list of measured delta times
 //  It is prepopulared with enough space for 10 seconds at around 2500 fps
-//  This is done to prevent the list from resizing during the benchmark,
+//  This is done to decrease the chance that the list will resize during the benchmark,
 //   which would cause the program to stutter.
 private static readonly List<double> Milliseconds = new(capacity: 25000);
 
@@ -87,12 +86,12 @@ lastTime = glfwGetTime();
 
 if (glfwGetTime() >= 11.0)
 {
-    // Close the window after 10 seconds:
+	// Close the window after 10 seconds:
 	glfwSetWindowShouldClose(_window, 1);
 }
 else if (glfwGetTime() > 1.0) // skips the first second, to avoid the initial lag
 {
-    // Log the delta time:
+	// Log the delta time:
 	Milliseconds.Add(deltaTime * 1000); // in milliseconds
 }
 
@@ -102,26 +101,31 @@ File.WriteAllLines("milliseconds.txt", Milliseconds.ConvertAll(d => d.ToString()
 Here is the result of the graphics application benchmarks:
 
 In this graph, you can see the delta times of the two projects over time.
-![](https://technicjelle.github.io/GXPTechComparison/plot.png)
+
+![Two line graphs showing the ms/frame of the Legacy tech stack vs the Modern one. The Legacy is a bit higher, and has more spikes](https://technicjelle.github.io/GXPTechComparison/plot.png)
+
 (I've done my best to style this graph to be as clear and informative as possible,
 but there's only so much I can do when I have around 30 000 data points.)
 
 The reason the Legacy project has fewer data points is because it ran at a lower frame rate.
 This naturally caused there to be fewer data points in the same time frame of 10 seconds.
 
-In this graph, you can see the histogram of the delta times of the two projects.
+In this graph, you can see the delta times of the two projects in a histogram.
 That shows how often a certain delta time occurred.
-![](https://technicjelle.github.io/GXPTechComparison/hist.png)
+
+![A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack](https://technicjelle.github.io/GXPTechComparison/hist.png)
+
 (The values over 0.60 ms have been clipped off to free up more space for the important parts of the data.
 There were hardly any data points above 0.60 ms anyway.)
 
 ## Image Loader Benchmarks
 The image loading benchmark projects are much simpler: it just loads an image,
-and gets the pointer to the pixel data in memory.
+and gets the pointer to the pixel data in memory, which is then returned from the function,
+to prevent the compiler from optimizing the function away, because it's not used.
 
 The measuring here is done more "properly", by using [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet).
 Using it made it incredibly simple to very accurately and properly compare the two image loading methods.  
-Due to the way C# works, in regard to JIT compilation and garbage collection,
+Due to the way C# works, in regard to JIT compilation and Garbage Collection,
 the first run of the benchmarks is usually slower than the rest, because it has to compile the code.
 BenchmarkDotNet takes care of this by running the benchmark multiple times and discarding the first run.
 
@@ -154,16 +158,20 @@ class ImageLoader
 BenchmarkRunner.Run<ImageLoader>();
 ```
 (Here, I have combined the code for System.Drawing and SkiaSharp in one code snippet.
-In reality, they are two separate projects entirely, due to using different .NET versions.)
+In reality, they are two separate projects entirely, due to using such wildly different .NET versions.)
 
 I have also managed to create a GitHub Actions workflow that runs these benchmarks on every push to the repository,
 and publishes a report to the Actions tab:
-![](./.github/readme_assets/benches-summaries.png)
+
+![A screenshot of a summary of a GitHub Actions run](./.github/readme_assets/benches-summaries-dark.png#gh-dark-mode-only)
+![A screenshot of a summary of a GitHub Actions run](./.github/readme_assets/benches-summaries-light.png#gh-light-mode-only)
+
 It also publishes the raw benchmark results as artifacts, so they can be downloaded and inspected.
 With those artifacts, it also automatically creates a plot of the results.
 
 Here is the result of the image loading benchmarks:
-![](https://technicjelle.github.io/GXPTechComparison/benches.png)
+
+![A bar graph depicting System.Drawing as taking around 3 ms to load an image, and SkiaSharp taking around 4ms](https://technicjelle.github.io/GXPTechComparison/benches.png)
 
 ## Experiences
 
@@ -185,7 +193,7 @@ all the example projects and images have disappeared.
 During the development of this project, I have really felt the age of the .NET Framework.
 It is extremely clunky, especially in the building and packaging department.
 I have really come to appreciate the new `csproj` format, and the new `dotnet` CLI tool.
-They really managed to streamline the process of building and running .NET projects with .NET 5 and later.
+They really managed to streamline the process of building and running modern .NET projects.
 
 Trying to make GitHub Actions retrieve the dependencies, build, and run the .NET Framework project was a true nightmare.
 Many of the commands required were surprisingly badly documented, for Microsoft standards,
@@ -197,8 +205,8 @@ but it was not a pleasant experience at all.
 One more reason to move to .NET 8.
 
 ## Conclusion
-The Modern technology stack is more performant than the Legacy technology stack,
-while also being more modern, better supported, better documented, and just plain simpler,
+The Modern technology stack is generally more performant than the Legacy technology stack.
+It is also being more modern, better supported, better documented, and just plain simpler,
 while still offering more control and features in case you want it at the same time.
 
 Even though SkiaSharp may be a bit slower at image loading than System.Drawing,
