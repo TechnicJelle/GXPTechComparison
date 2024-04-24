@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using Legacy.bindings;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,7 +17,8 @@ static internal class Program
 	private const string WINDOW_TITLE = "Project Legacy";
 
 	private static bool _benchmark = false;
-	private static readonly List<double> Milliseconds = new(25000); // 10 seconds at around 2500 fps
+	private static int _frameCount = 0;
+	private static readonly double[] Milliseconds = new double[35000]; // 10 seconds at around 3500 fps
 
 	private static readonly float[] Vertices =
 	[
@@ -55,8 +55,9 @@ static internal class Program
 
 		if (_benchmark)
 		{
+			Console.WriteLine("Frame count: " + _frameCount);
 			// save recorded frame times to a file
-			File.WriteAllLines("milliseconds_legacy.txt", Milliseconds.ConvertAll(d => d.ToString(CultureInfo.InvariantCulture)));
+			File.WriteAllLines("milliseconds_legacy.txt", Milliseconds.Where(d => d != 0.0).Select(d => d.ToString(CultureInfo.InvariantCulture)));
 		}
 
 		return 0;
@@ -157,7 +158,7 @@ static internal class Program
 				}
 				else if (GLFW.GetTime() > 1.0) // skip the first second, to avoid the initial lag
 				{
-					Milliseconds.Add(deltaTime * 1000); // in milliseconds
+					Milliseconds[_frameCount++] = deltaTime * 1000; // in milliseconds
 				}
 			}
 

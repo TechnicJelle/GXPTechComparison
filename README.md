@@ -71,11 +71,13 @@ By starting the program with the `benchmark` argument, it will run in Benchmark 
 
 Here are the relevant parts of the code that logs the delta times:
 ```csharp
+// The frame count, to index into the Milliseconds array
+private static int _frameCount = 0;
+
 // The list of measured delta times
-//  It is prepopulared with enough space for 10 seconds at around 2500 fps
-//  This is done to decrease the chance that the list will resize during the benchmark,
-//   which would cause the program to stutter.
-private static readonly List<double> Milliseconds = new(capacity: 25000);
+//  It is prepopulared with enough space for 10 seconds at 3500 fps
+//  This is to avoid having to resize the array at runtime, which is slow
+private static readonly double[] Milliseconds = new double[35000];
 
 // Before the game loop:
 double lastTime = glfwGetTime();
@@ -93,11 +95,13 @@ if (glfwGetTime() >= 11.0)
 else if (glfwGetTime() > 1.0) // skips the first second, to avoid the initial lag
 {
 	// Log the delta time:
-	Milliseconds.Add(deltaTime * 1000); // in milliseconds
+	Milliseconds[_frameCount++] = deltaTime * 1000; // in milliseconds
 }
 
-// Once the program is done:
-File.WriteAllLines("milliseconds.txt", Milliseconds.ConvertAll(d => d.ToString()));
+// Once the program is done, the data is written to a file:
+File.WriteAllLines("milliseconds.txt", Milliseconds.Where(d => d != 0.0).Select(d => d.ToString(CultureInfo.InvariantCulture)));
+// The zeroes are filtered out, because they are not actual data points,
+//  just the preallocated values from the array that didn't end up getting filled in
 ```
 Here is the result of the graphics application benchmarks:
 
