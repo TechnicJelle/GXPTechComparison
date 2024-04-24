@@ -15,4 +15,4 @@ plt.xlabel("ms/frame")
 plt.ylabel("occurrences")
 
 plt.tight_layout()
-plt.savefig("out/hist.png", dpi=600)
+plt.savefig("out/hist.png", dpi=200)
