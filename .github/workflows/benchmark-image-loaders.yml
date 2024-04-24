@@ -107,6 +107,9 @@ jobs:
         # When multiple artifacts are matched, this changes the behavior of the destination directories. If true, the downloaded artifacts will be in the same directory specified by path. If false, the downloaded artifacts will be extracted into individual named directories within the specified path.
         merge-multiple: true
 
+    - name: Install Roboto font
+      run: sudo apt-get install fonts-roboto
+
     - name: Install Python dependencies
       run: pip install numpy matplotlib
 
@@ -122,4 +125,3 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
-

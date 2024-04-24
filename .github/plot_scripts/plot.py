@@ -1,14 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rcParams["font.family"] = "Roboto"
+
 gl = np.loadtxt("in/milliseconds_legacy.txt")
 gm = np.loadtxt("in/milliseconds_modern.txt")
+
+avgl = np.average(gl)
+avgm = np.average(gm)
 
 plt.figure(figsize=(7,4))
 
 linewidth=0.1
-plt.plot(gl, linewidth=linewidth, label="Legacy")
-plt.plot(gm, linewidth=linewidth, label="Modern")
+plt.plot(gl, linewidth=linewidth, label="Legacy " + f"(avg: {avgl:.2f})")
+plt.plot(gm, linewidth=linewidth, label="Modern " + f"(avg: {avgm:.2f})")
 
 leg = plt.legend()
 plt.xlabel("frame")
