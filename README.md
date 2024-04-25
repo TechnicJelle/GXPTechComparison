@@ -1,6 +1,10 @@
 # GXP Tech Comparison
-I've been planning on modernising the GXP Engine for a while now.  
-So this project is a comparison between the current technology stack and a new proposed technology stack.  
+The GXP Engine is a game engine initially developed at Saxion CMGT as a replacement for Flash.  
+It is currently used at the study as an educational "bridge" between Processing and Unity.  
+However, the technology stack it uses is extremely outdated and not very optimal.
+
+So this project is a comparison between the current technology stack and a new proposed technology stack.
+
 This was done for my "Advanced Tools" course at Saxion CMGT.
 
 <!-- TOC -->
@@ -118,8 +122,8 @@ but there's only so much I can do when I have around 30 000 data points.)
 The reason the Legacy project has fewer data points is because it ran at a lower frame rate.
 This naturally caused there to be fewer data points in the same time frame of 10 seconds.
 
-In this graph, you can see the delta times of the two projects in a histogram.
-That shows how often a certain delta time occurred.
+In this graph, you can see the delta times of the two projects in a histogram
+that shows how often a certain delta time occurred.
 
 ![A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack](https://technicjelle.github.io/GXPTechComparison/hist.png)
 
