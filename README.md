@@ -9,6 +9,7 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
 
 <!-- TOC -->
 * [GXP Tech Comparison](#gxp-tech-comparison)
+  * [Build instructions](#build-instructions)
   * [Evaluation proposal](#evaluation-proposal)
   * [Method](#method)
   * [Project Differences](#project-differences)
@@ -21,6 +22,20 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
   * [Conclusion](#conclusion)
   * [References](#references)
 <!-- TOC -->
+
+## Build instructions
+To build all four projects, make sure you are on Windows and have these SDKs installed:
+- .NET Framework 4.8.1 Developer Pack ([download](https://dotnet.microsoft.com/download/dotnet-framework/net481))
+- .NET 8.0 SDK ([download](https://dotnet.microsoft.com/download/dotnet/8.0))
+
+(If you're on Linux, you can only build the Modern projects, as the Legacy projects are Windows-only.)
+
+Then, you can open the solution file in Rider or Visual Studio, and build the projects from there.
+
+If you want to build them from the command line, you can use MSBuild for the Legacy projects,
+and the `dotnet` CLI tool for the Modern projects.  
+Examples on how to use those commands can be found in
+[this](./.github/workflows/benchmark-image-loaders.yml) GitHub Actions workflow file.
 
 ## Evaluation proposal
 I want to compare the (graphics) performance of
@@ -43,7 +58,7 @@ Here's a nice table outlining the differences between the two tech stacks:
 | Project                | Legacy                 | Modern                                            |
 |------------------------|------------------------|---------------------------------------------------|
 | Language               | `C#`                   | `C#`                                              |
-| Runtime                | `.NET Framework 4.8`   | `.NET 8`                                          |
+| Runtime                | `.NET Framework 4.8.1` | `.NET 8`                                          |
 | OpenGL Version         | `Legacy (1, I think?)` | `3.3`                                             |
 | GLFW Version           | `2.6`                  | `3.3.2+`                                          |
 | OpenGL & GLFW bindings | `Custom ones`          | [`Arqan`](https://github.com/TheBoneJarmer/Arqan) |
