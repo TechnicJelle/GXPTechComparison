@@ -193,7 +193,7 @@ and publishes a report to the Actions tab:
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="./.github/readme_assets/benches-summaries-dark.png">
 	<source media="(prefers-color-scheme: light)" srcset="./.github/readme_assets/benches-summaries-light.png">
-	<img alt="A screenshot of a summary of a GitHub Actions run" src="./.github/readme_assets/benches-summaries-dark.png">
+	<img alt="A screenshot of a summary of a GitHub Actions run" src="./.github/readme_assets/benches-summaries-dark.png" width="50%">
 </picture>
 
 It also publishes the raw benchmark results as artifacts, so they can be downloaded and inspected.
