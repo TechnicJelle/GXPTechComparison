@@ -9,18 +9,18 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
 
 <!-- TOC -->
 * [GXP Tech Comparison](#gxp-tech-comparison)
-	* [Build instructions](#build-instructions)
-	* [Evaluation proposal](#evaluation-proposal)
-	* [Method](#method)
-	* [Project Differences](#project-differences)
-	* [Graphics Applications](#graphics-applications)
-	* [Image Loader Benchmarks](#image-loader-benchmarks)
-	* [Experiences](#experiences)
-		* [Legacy OpenGL](#legacy-opengl)
-		* [.NET Framework 4.8 vs .NET 8](#net-framework-48-vs-net-8)
-		* [Graphics programs performance analysis and optimisation](#graphics-programs-performance-analysis-and-optimisation)
-	* [Conclusion](#conclusion)
-	* [References](#references)
+  * [Build instructions](#build-instructions)
+  * [Evaluation proposal](#evaluation-proposal)
+  * [Method](#method)
+  * [Project Differences](#project-differences)
+  * [Graphics Applications](#graphics-applications)
+  * [Image Loader Benchmarks](#image-loader-benchmarks)
+  * [Experiences](#experiences)
+    * [Legacy OpenGL](#legacy-opengl)
+    * [.NET Framework 4.8 vs .NET 8](#net-framework-48-vs-net-8)
+    * [Graphics programs performance analysis and optimisation](#graphics-programs-performance-analysis-and-optimisation)
+  * [Conclusion](#conclusion)
+  * [References](#references)
 <!-- TOC -->
 
 ## Build instructions
@@ -129,7 +129,11 @@ Here is the result of the graphics application benchmarks:
 
 In this graph, you can see the delta times of the two projects over time.
 
-<img  alt="Two line graphs showing the ms/frame of the Legacy tech stack vs the Modern one. The Legacy is a bit higher, and has more spikes" src="https://technicjelle.github.io/GXPTechComparison/plot.svg" width="100%">
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/plot_dark.svg">
+	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/plot.svg">
+	<img alt="Two line graphs showing the ms/frame of the Legacy tech stack vs the Modern one. The Legacy is a bit higher, and has more spikes" src="https://technicjelle.github.io/GXPTechComparison/plot.svg" width="100%">
+</picture>
 
 (I've done my best to style this graph to be as clear and informative as possible,
 but there's only so much I can do when I have around 30 000 data points.)
@@ -140,7 +144,11 @@ This naturally caused there to be fewer data points in the same time frame of 10
 In this graph, you can see the delta times of the two projects in a histogram
 that shows how often a certain delta time occurred.
 
-<img alt="A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack" src="https://technicjelle.github.io/GXPTechComparison/hist.svg" width="100%">
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/hist_dark.svg">
+	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/hist.svg">
+	<img alt="A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack" src="https://technicjelle.github.io/GXPTechComparison/hist.svg" width="100%">
+</picture>
 
 (The values over 0.60 ms have been clipped off to free up more space for the important parts of the data.
 There were very few data points above 0.60 ms anyway. Those outliers can be seen on the previous graph.)
@@ -193,7 +201,7 @@ and publishes a report to the Actions tab:
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="./.github/readme_assets/benches-summaries-dark.png">
 	<source media="(prefers-color-scheme: light)" srcset="./.github/readme_assets/benches-summaries-light.png">
-	<img alt="A screenshot of a summary of a GitHub Actions run" src="./.github/readme_assets/benches-summaries-dark.png" width="50%">
+	<img alt="A screenshot of a summary of a GitHub Actions run" src="./.github/readme_assets/benches-summaries-light.png" width="50%">
 </picture>
 
 It also publishes the raw benchmark results as artifacts, so they can be downloaded and inspected.
@@ -201,7 +209,11 @@ With those artifacts, it also automatically creates a plot of the results.
 
 Here is the result of the image loading benchmarks:
 
-<img  alt="A bar graph depicting System.Drawing as taking around 3 ms to load an image, and SkiaSharp taking around 4ms" src="https://technicjelle.github.io/GXPTechComparison/benches.svg" width="100%">
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/benches_dark.svg">
+	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/benches.svg">
+	<img alt="A bar graph depicting System.Drawing as taking around 3 ms to load an image, and SkiaSharp taking around 4ms" src="https://technicjelle.github.io/GXPTechComparison/benches.svg" width="100%">
+</picture>
 
 ## Experiences
 

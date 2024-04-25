@@ -114,7 +114,7 @@ jobs:
       run: pip install numpy matplotlib
 
     - name: Generate plot image with Python
-      run: python benches.py
+      run: python benches.py ; python benches.py dark
 
     - name: Setup Pages
       uses: actions/configure-pages@v5
