@@ -129,7 +129,7 @@ Here is the result of the graphics application benchmarks:
 
 In this graph, you can see the delta times of the two projects over time.
 
-<a href="https://technicjelle.github.io/GXPTechComparison/plot.svg">
+<a href="https://technicjelle.github.io/GXPTechComparison/plot.svg" target="_blank">
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/plot_dark.svg">
 	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/plot.svg">
@@ -146,7 +146,7 @@ This naturally caused there to be fewer data points in the same time frame of 10
 In this graph, you can see the delta times of the two projects in a histogram
 that shows how often a certain delta time occurred.
 
-<a href="https://technicjelle.github.io/GXPTechComparison/hist.svg">
+<a href="https://technicjelle.github.io/GXPTechComparison/hist.svg" target="_blank">
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/hist_dark.svg">
 	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/hist.svg">
@@ -204,7 +204,7 @@ and publishes a report to the Actions tab:
 
 [![Benchmark Image Loaders](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml/badge.svg)](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml)
 
-<a href="https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml">
+<a href="https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml" target="_blank">
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="./.github/readme_assets/benches-summaries-dark.png">
 	<source media="(prefers-color-scheme: light)" srcset="./.github/readme_assets/benches-summaries-light.png">
@@ -217,7 +217,7 @@ With those artifacts, it also automatically creates a plot of the results.
 
 Here is the result of the image loading benchmarks:
 
-<a href="https://technicjelle.github.io/GXPTechComparison/benches.svg">
+<a href="https://technicjelle.github.io/GXPTechComparison/benches.svg" target="_blank">
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="https://technicjelle.github.io/GXPTechComparison/benches_dark.svg">
 	<source media="(prefers-color-scheme: light)" srcset="https://technicjelle.github.io/GXPTechComparison/benches.svg">
