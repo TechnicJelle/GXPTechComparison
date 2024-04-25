@@ -24,4 +24,4 @@ for legobj in leg.legendHandles:
     legobj.set_linewidth(2.0)
 
 plt.tight_layout()
-plt.savefig("out/plot.png", dpi=600)
+plt.savefig("out/plot.png", dpi=200)

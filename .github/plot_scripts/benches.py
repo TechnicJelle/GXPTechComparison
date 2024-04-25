@@ -17,4 +17,4 @@ plt.bar(f"SkiaSharp\n({ssMean} ms)", ssMean, yerr=ssStd, capsize=capsize)
 plt.ylabel("ms to load image")
 
 plt.tight_layout()
-plt.savefig("out/benches.png", dpi=600)
+plt.savefig("out/benches.png", dpi=200)
