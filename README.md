@@ -291,9 +291,9 @@ Ironically, exactly the half that I didn't need...
 A couple of days later, I did manage to make a connection, though!
 And so I was able to compare the performance of the two projects side-by-side, using the profiling tools in Nsight.
 
-![A screenshot of Nsight with the Legacy project open](./.github/readme_assets/nsight-legacy.png)
+[![A screenshot of Nsight with the Legacy project open](./.github/readme_assets/nsight-legacy.png)](https://raw.githubusercontent.com/TechnicJelle/GXPTechComparison/main/.github/readme_assets/nsight-legacy.png)
 
-![A screenshot of Nsight with the Modern project open](./.github/readme_assets/nsight-modern.png)
+[![A screenshot of Nsight with the Modern project open](./.github/readme_assets/nsight-modern.png)](https://raw.githubusercontent.com/TechnicJelle/GXPTechComparison/main/.github/readme_assets/nsight-modern.png)
 
 Even though the Modern code was fewer total OpenGL instructions, it was still slower.
 
