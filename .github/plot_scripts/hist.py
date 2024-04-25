@@ -12,12 +12,12 @@ avgm = np.average(gm)
 plt.xlim(0.25, 0.6)
 
 bins = int(max(len(gl), len(gm)) / 10)
-plt.hist(gl, bins=bins, label="Legacy " + f"(avg: {avgl:.2f})")
-plt.hist(gm, bins=bins, label="Modern " + f"(avg: {avgm:.2f})")
+plt.hist(gl, bins=bins, label="Legacy " + f"(avg: {avgl:.2f} ms)")
+plt.hist(gm, bins=bins, label="Modern " + f"(avg: {avgm:.2f} ms)")
 
 plt.legend()
 plt.xlabel("ms/frame")
 plt.ylabel("occurrences")
 
 plt.tight_layout()
-plt.savefig("out/hist.png", dpi=200)
+plt.savefig("out/hist.svg")
