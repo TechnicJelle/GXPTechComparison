@@ -3,7 +3,7 @@ The GXP Engine is a game engine initially developed at Saxion CMGT as a replacem
 It is currently used at the study as an educational "bridge" between Processing and Unity.  
 However, the technology stack it uses is extremely outdated and not very optimal.
 
-So this project is a comparison between the current technology stack and a new proposed technology stack.
+This project is a comparison between the current technology stack and a new proposed technology stack.
 
 This was done for my "Advanced Tools" course at Saxion CMGT.
 
