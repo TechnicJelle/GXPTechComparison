@@ -11,9 +11,9 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
   * [Graphics Applications](#graphics-applications)
   * [Image Loader Benchmarks](#image-loader-benchmarks)
   * [Experiences](#experiences)
-    * [On Legacy OpenGL](#on-legacy-opengl)
-    * [On .NET Framework](#on-net-framework)
-    * [Graphics programs performance analysis](#graphics-programs-performance-analysis)
+    * [Legacy OpenGL](#legacy-opengl)
+    * [.NET Framework 4.8 vs .NET 8](#net-framework-48-vs-net-8)
+    * [Graphics programs performance analysis and optimisation](#graphics-programs-performance-analysis-and-optimisation)
   * [Conclusion](#conclusion)
   * [References](#references)
 <!-- TOC -->
@@ -50,6 +50,9 @@ Here's a nice table outlining the differences between the two tech stacks:
 (Project Legacy used to be called "ProjWinDrawing", and Project Modern used to be called "ProjSkiaSharp".  
 I have changed the names to better suit the slightly larger comparison scope.)
 
+.NET Framework 4.8 is the last version of the .NET Framework, and it is only supported on Windows.  
+.NET 8 is the current latest version of .NET, and it is supported on many platforms.
+
 ## Graphics Applications
 To compare the two technology stacks, I have created a simple application for both.
 It loads an image and displays it in a window using OpenGL and GLFW.
@@ -58,8 +61,8 @@ All the image assets for these projects came from either LearnOpenGL or the GXP 
 
 ![Screenshot of the Modern project](./.github/readme_assets/demo.png)
 
-The Legacy project was modeled as closely as possible to the rendering part of the current GXP Engine,
-and the Modern project was then in turn modeled after the Legacy project, but with the new technology stack.
+The Legacy project was modelled as closely as possible to the rendering part of the current GXP Engine,
+and the Modern project was then in turn modelled after the Legacy project, but with the new technology stack.
 
 I have deliberately kept the projects as simple as possible, to make the comparison as fair as possible.
 All the code is in a single file.
@@ -126,7 +129,7 @@ There were hardly any data points above 0.60 ms anyway.)
 ## Image Loader Benchmarks
 The image loading benchmark projects are much simpler: it just loads an image,
 and gets the pointer to the pixel data in memory, which is then returned from the function,
-to prevent the compiler from optimizing the function away, because it's not used.
+to prevent the compiler from optimising the function away, because it's not used.
 
 The measuring here is done more "properly", by using [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet).
 Using it made it incredibly simple to very accurately and properly compare the two image loading methods.  
@@ -182,7 +185,7 @@ Here is the result of the image loading benchmarks:
 
 Here are some various thoughts and experiences I had during the development of this project:
 
-### On Legacy OpenGL
+### Legacy OpenGL
 The GXP Engine started as an educational tool. And while NeoGXP doesn't have that same goal,
 using more modern OpenGL does make it a better resource to learn from anyway.  
 For people who want to look under the hood to see how it works, they'll learn something useful,
@@ -194,13 +197,13 @@ It has been extremely difficult to find good resources on it.
 The only good guide I found was at https://nehe.gamedev.net/, and it is already half-broken;
 all the example projects and images have disappeared.
 
-### On .NET Framework
-During the development of this project, I have really felt the age of the .NET Framework.
+### .NET Framework 4.8 vs .NET 8
+During the development of this project, I have really felt the age of .NET Framework 4.8.
 It is extremely clunky, especially in the building and packaging department.
 I have really come to appreciate the new `csproj` format, and the new `dotnet` CLI tool.
 They really managed to streamline the process of building and running modern .NET projects.
 
-Trying to make GitHub Actions retrieve the dependencies, build, and run the .NET Framework project was a true nightmare.
+Trying to make GitHub Actions retrieve the dependencies, build, and run the .NET Framework 4.8 project was a true nightmare.
 Many of the commands required were surprisingly badly documented, for Microsoft standards,
 and some were downright contradictory. Aside from that, they were also rather nonsensical, in my opinion.
 Setting up the .NET 8 project went without any issues at all, on the other hand.  
@@ -209,30 +212,33 @@ but it was not a pleasant experience at all.
 
 One more reason to move to .NET 8.
 
-### Graphics programs performance analysis
+### Graphics programs performance analysis and optimisation
 During the development of this project, I have learned a lot about performance analysis for graphics programs.
 
 I already knew of Renderdoc and Nsight, but I had never used them before.
 
-But when rewriting the Legacy project to use Modern OpenGL, I just couldn't get it to be faster.
-Or even the same speed. It was always slower.
-I had no idea why, and so I turned to Renderdoc to help me figure it out.
-However, Renderdoc didn't work with the Legacy project, because it does not support Legacy OpenGL.
+But when rewriting the Legacy project to use Modern OpenGL, I initially just couldn't get it to be faster.
+Or even the same speed. It just kept being slower.  
+I had no idea why, and so I decided to try using Renderdoc to help me figure it out.
+However, Renderdoc didn't work with the Legacy project because it does not support Legacy OpenGL.
 
-And so I turned to Nsight, which does support Legacy OpenGL.
+And so I turned to Nsight, which does support Legacy OpenGL.  
 But it didn't support 32-bit applications, which the Legacy project was.
-Initially, I tried rewriting it to be 64-bit, but that was a huge hassle.
-I had to change the csproj file, to build to x64, and then I had to change the GLFW bindings to be 64-bit.
+
+Initially, I tried rewriting it to be 64-bit, but that was a huge hassle:  
+To build to x64, I had to change that in the csproj file,
+and then I had to swap out the GLFW DLL to a 64-bit one.  
 But I couldn't just download the 64-bit GLFW DLLs,
-because I didn't know which version of GLFW the Legacy project was actually using!
-Only by looking through the DLL with a hex editor did I find out that it was using GLFW 2.6.
-There were no binaries to download for that ancient version, so I had to build them myself.
-After downloading a copy of the source code from SourceForge, I had to build it with make.
-I finally managed to do that with the Visual Studio Developer PowerShell,
-but it only built as a 32-bit DLL...
+because I didn't know which version of GLFW the Legacy project was actually using,
+as it is not specified or documented anywhere.  
+Only by looking through the DLL with a hex editor did I find out that it was using GLFW 2.6.  
+There were no binaries to download for that ancient version, so I had to build them myself.  
+After downloading a copy of the source code from SourceForge, I saw that it had a make script.  
+I finally managed to execute that script with the nmake program in the Visual Studio Developer PowerShell.  
+However, the included make script only ended up building as a 32-bit DLL, and I was not about to start porting _that_ to 64-bit.  
 So that was a dead end.
 
-I got the bright idea to just use an older version of Nsight that _did_ still support 32-bit applications.
+I then got the bright idea to just use an older version of Nsight that _did_ still support 32-bit applications.
 After looking through the release notes of a bunch of versions, I finally found one that did: 2021.4.2.
 
 After installing that, I finally managed to start the Legacy project with Nsight, and make a connection to it.
@@ -246,7 +252,7 @@ And so I was able to compare the performance of the two projects side-by-side, u
 
 ![A screenshot of Nsight with the Modern project open](./.github/readme_assets/nsight-modern.png)
 
-Even though the Modern code was less total OpenGL instructions, it was still slower.
+Even though the Modern code was fewer total OpenGL instructions, it was still slower.
 
 I saw that I was setting the shader program every frame, which was unnecessary, as I only have one to begin with.
 So I optimised that out
@@ -254,14 +260,25 @@ So I optimised that out
 but it made little difference.
 
 Ultimately, I found out that the issue lay in the amount of data I was sending to the GPU.
-In the Legacy project, it only sends the vertex position as a 2D vector, and the texture coordinates as a 2D vector,
-and the colour was set for the entire object.  
-While in the Modern project, I was sending the vertex position as a 3D vector, the texture coordinates as a 2D vector,
-and the colour as a 3D vector for every single vertex.  
-By optimising the Modern project to only send the data that was actually needed,
-I managed to get it to be faster than the Legacy project! 
-([commit1](https://github.com/TechnicJelle/GXPTechComparison/commit/8d1e09d6954a7954f84db669b824b6dff7db1aac),
-[commit2](https://github.com/TechnicJelle/GXPTechComparison/commit/1c02ec0bacf19b8734e664d8d43f89a65686ec1c))
+
+In the Legacy project, every vertex only has its position as a 2D vector and the texture coordinates as a 2D vector.
+The colour is set for the entire object at once.  
+
+However, due to having written the Modern project with perhaps a bit too much inspiration from the Learn OpenGL tutorials,
+every vertex had the position as a 3D vector and the texture coordinates as a 2D vector.  
+Seeing as the GXP Engine is an engine meant for 2D games, it doesn't need 3D vectors for the position,
+so I changed that to 2D vectors ([commit](https://github.com/TechnicJelle/GXPTechComparison/commit/1c02ec0bacf19b8734e664d8d43f89a65686ec1c)).  
+(It could be useful for layering, but that's not something that the GXP Engine does.
+You control the "layering" by the order in which you draw things.)  
+This helped a bit, but it was still slower.
+
+I then realised that I was also sending the colour as a 3D vector for every single vertex individually,
+Instead of setting the colour for the entire object at once.  
+This was unnecessary, as the colour is always the same for every vertex in the object.
+
+So I made the Modern project only send the same data to the GPU that the Legacy project was sending,
+and with that, I managed to get it to be faster than the Legacy project! 
+([commit](https://github.com/TechnicJelle/GXPTechComparison/commit/8d1e09d6954a7954f84db669b824b6dff7db1aac))
 
 ## Conclusion
 The Modern technology stack is generally more performant than the Legacy technology stack.
