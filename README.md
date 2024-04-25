@@ -9,18 +9,18 @@ This was done for my "Advanced Tools" course at Saxion CMGT.
 
 <!-- TOC -->
 * [GXP Tech Comparison](#gxp-tech-comparison)
-  * [Build instructions](#build-instructions)
-  * [Evaluation proposal](#evaluation-proposal)
-  * [Method](#method)
-  * [Project Differences](#project-differences)
-  * [Graphics Applications](#graphics-applications)
-  * [Image Loader Benchmarks](#image-loader-benchmarks)
-  * [Experiences](#experiences)
-    * [Legacy OpenGL](#legacy-opengl)
-    * [.NET Framework 4.8 vs .NET 8](#net-framework-48-vs-net-8)
-    * [Graphics programs performance analysis and optimisation](#graphics-programs-performance-analysis-and-optimisation)
-  * [Conclusion](#conclusion)
-  * [References](#references)
+	* [Build instructions](#build-instructions)
+	* [Evaluation proposal](#evaluation-proposal)
+	* [Method](#method)
+	* [Project Differences](#project-differences)
+	* [Graphics Applications](#graphics-applications)
+	* [Image Loader Benchmarks](#image-loader-benchmarks)
+	* [Experiences](#experiences)
+		* [Legacy OpenGL](#legacy-opengl)
+		* [.NET Framework 4.8 vs .NET 8](#net-framework-48-vs-net-8)
+		* [Graphics programs performance analysis and optimisation](#graphics-programs-performance-analysis-and-optimisation)
+	* [Conclusion](#conclusion)
+	* [References](#references)
 <!-- TOC -->
 
 ## Build instructions
@@ -39,8 +39,8 @@ Examples on how to use those commands can be found in
 
 ## Evaluation proposal
 I want to compare the (graphics) performance of
- Legacy OpenGL paired with (Windows) System.Drawing running on .NET Framework 4.8,
- with Modern OpenGL paired with SkiaSharp running on .NET 8.
+Legacy OpenGL paired with (Windows) System.Drawing running on .NET Framework 4.8,
+with Modern OpenGL paired with SkiaSharp running on .NET 8.
 
 The former is the technology currently used in the GXP Engine,
 the latter is the technology we're interested in using for NeoGXP.
@@ -190,8 +190,11 @@ In reality, they are two separate projects entirely, due to using such wildly di
 I have also managed to create a GitHub Actions workflow that runs these benchmarks on every push to the repository,
 and publishes a report to the Actions tab:
 
-![A screenshot of a summary of a GitHub Actions run](./.github/readme_assets/benches-summaries-dark.png#gh-dark-mode-only)
-![A screenshot of a summary of a GitHub Actions run](./.github/readme_assets/benches-summaries-light.png#gh-light-mode-only)
+<picture>
+	<source media="(prefers-color-scheme: dark)" srcset="./.github/readme_assets/benches-summaries-dark.png">
+	<source media="(prefers-color-scheme: light)" srcset="./.github/readme_assets/benches-summaries-light.png">
+	<img alt="A screenshot of a summary of a GitHub Actions run" src="./.github/readme_assets/benches-summaries-dark.png">
+</picture>
 
 It also publishes the raw benchmark results as artifacts, so they can be downloaded and inspected.
 With those artifacts, it also automatically creates a plot of the results.
@@ -281,7 +284,7 @@ but it made little difference.
 Ultimately, I found out that the issue lay in the amount of data I was sending to the GPU.
 
 In the Legacy project, every vertex only has its position as a 2D vector and the texture coordinates as a 2D vector.
-The colour is set for the entire object at once.  
+The colour is set for the entire object at once.
 
 However, due to having written the Modern project with perhaps a bit too much inspiration from the Learn OpenGL tutorials,
 every vertex had the position as a 3D vector and the texture coordinates as a 2D vector.  
@@ -296,7 +299,7 @@ Instead of setting the colour for the entire object at once.
 This was unnecessary, as the colour is always the same for every vertex in the object.
 
 So I made the Modern project only send the same data to the GPU that the Legacy project was sending,
-and with that, I managed to get it to be faster than the Legacy project! 
+and with that, I managed to get it to be faster than the Legacy project!
 ([commit](https://github.com/TechnicJelle/GXPTechComparison/commit/8d1e09d6954a7954f84db669b824b6dff7db1aac))
 
 ## Conclusion
