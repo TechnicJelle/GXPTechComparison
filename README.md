@@ -129,7 +129,7 @@ Here is the result of the graphics application benchmarks:
 
 In this graph, you can see the delta times of the two projects over time.
 
-![Two line graphs showing the ms/frame of the Legacy tech stack vs the Modern one. The Legacy is a bit higher, and has more spikes](https://technicjelle.github.io/GXPTechComparison/plot.svg)
+<img  alt="Two line graphs showing the ms/frame of the Legacy tech stack vs the Modern one. The Legacy is a bit higher, and has more spikes" src="https://technicjelle.github.io/GXPTechComparison/plot.svg" width="100%">
 
 (I've done my best to style this graph to be as clear and informative as possible,
 but there's only so much I can do when I have around 30 000 data points.)
@@ -140,7 +140,7 @@ This naturally caused there to be fewer data points in the same time frame of 10
 In this graph, you can see the delta times of the two projects in a histogram
 that shows how often a certain delta time occurred.
 
-![A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack](https://technicjelle.github.io/GXPTechComparison/hist.svg)
+<img alt="A histogram showing the Legacy tech stack generally taking longer to render a frame than the Modern tech stack" src="https://technicjelle.github.io/GXPTechComparison/hist.svg" width="100%">
 
 (The values over 0.60 ms have been clipped off to free up more space for the important parts of the data.
 There were very few data points above 0.60 ms anyway. Those outliers can be seen on the previous graph.)
@@ -198,7 +198,7 @@ With those artifacts, it also automatically creates a plot of the results.
 
 Here is the result of the image loading benchmarks:
 
-![A bar graph depicting System.Drawing as taking around 3 ms to load an image, and SkiaSharp taking around 4ms](https://technicjelle.github.io/GXPTechComparison/benches.svg)
+<img  alt="A bar graph depicting System.Drawing as taking around 3 ms to load an image, and SkiaSharp taking around 4ms" src="https://technicjelle.github.io/GXPTechComparison/benches.svg" width="100%">
 
 ## Experiences
 
