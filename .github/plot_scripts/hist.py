@@ -6,7 +6,7 @@ dark = "dark" in sys.argv
 
 plt.rcParams.update({
     "font.family": "Roboto",
-    "axes.facecolor": "#00000000",
+    "axes.facecolor": "#FFFFFF11",
     "savefig.facecolor": "#00000000",
     "savefig.edgecolor": "#00000000",
 })
