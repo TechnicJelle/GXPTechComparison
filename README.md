@@ -202,8 +202,7 @@ In reality, they are two separate projects entirely, due to using such wildly di
 I have also managed to create a GitHub Actions workflow that runs these benchmarks on every push to the repository,
 and publishes a report to the Actions tab:
 
-[![Benchmark Image Loaders](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml/badge.svg)](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml)
-
+[![Benchmark Image Loaders](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml/badge.svg)](https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml)  
 <a href="https://github.com/TechnicJelle/GXPTechComparison/actions/workflows/benchmark-image-loaders.yml" target="_blank">
 <picture>
 	<source media="(prefers-color-scheme: dark)" srcset="./.github/readme_assets/benches-summaries-dark.png">
