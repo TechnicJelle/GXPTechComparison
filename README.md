@@ -5,7 +5,7 @@ However, the technology stack it uses is extremely outdated and not very optimal
 
 This project is a comparison between the current technology stack and a new proposed technology stack.
 
-This was done for my "Advanced Tools" course at Saxion CMGT.
+This was done for my "Advanced Tools" course at Saxion CMGT. The grade I got was a 9 out of 10, which I am very happy with :)
 
 <!-- TOC -->
 * [GXP Tech Comparison](#gxp-tech-comparison)
